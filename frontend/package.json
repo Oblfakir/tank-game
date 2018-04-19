@@ -28,5 +28,8 @@
     "webpack-merge": "^4.1.2",
     "babel-eslint": "^8.2.2",
     "eslint": "^4.19.1"
+  },
+  "dependencies": {
+    "socket.io-client": "^2.1.0"
   }
 }
