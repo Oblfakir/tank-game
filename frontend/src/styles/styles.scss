@@ -1,0 +1,65 @@
+@import './reset.css';
+
+
+
+.page {
+  display: flex;
+
+  .picker{
+    margin: 20px;
+    width: 200px;
+
+    .figure-select {
+      box-shadow: 0 0 5px 1px;
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+
+      & > button {
+        box-sizing: border-box;
+        width: 100%;
+        height: 40px;
+        margin: 10px 0;
+        font-size: 20px;
+      }
+    }
+
+    #color-select {
+      & > input {
+        box-sizing: border-box;
+        margin: 20px 0;
+        width: 100%;
+        font-size: 20px;
+        height: 80px;
+      }
+    }
+  }
+  .container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+
+    #canvasRoot {
+      box-shadow: 0 0 5px 1px;
+    }
+
+    .buttons {
+      display: flex;
+
+      & > button {
+        font-size: 20px;
+        margin: 20px 50px 20px 0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+    }
+
+    #exportTextarea {
+      resize: none;
+      box-sizing: border-box;
+      width: 100%;
+      font-size: 16px;
+    }
+  }
+}
