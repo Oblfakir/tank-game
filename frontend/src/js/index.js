@@ -1,12 +1,26 @@
-import { config } from "./config/config";
-import { UserEventsObservable } from "./logic/user-events-observable";
-import { GameState } from "./models/game-state";
-import { Controller } from "./controllers/controller";
+import { config } from './config/config';
+import { UserEventsObservable } from './logic/user-events-observable';
+import { Controller } from './controllers/controller';
+import { TransportService } from './services/transport-service';
+import { constants } from './config/constants';
+import { SocketService } from "./services/socket-service";
 
-window.onload = () => {
+window.onload = async () => {
+    Object.assign(config, await getConfig());
+    Object.assign(constants, await getConstants());
     setCanvasSize();
     subscribeToUserEvents();
 };
+
+async function getConfig() {
+    const config = await TransportService.getConfig();
+    return await config.json()
+}
+
+async function getConstants() {
+    const constants = await TransportService.getConstants();
+    return await constants.json()
+}
 
 function setCanvasSize() {
     const canvas = document.getElementById('canvas');
@@ -16,8 +30,7 @@ function setCanvasSize() {
 
 function subscribeToUserEvents() {
     const context = document.getElementById('canvas').getContext('2d');
-
-    const observable = new UserEventsObservable();
-    const gameState = new GameState();
-    const controller = new Controller(observable, gameState, context);
+    const socketService = new SocketService();
+    const observable = new UserEventsObservable(socketService);
+    const controller = new Controller(observable, context, socketService);
 }

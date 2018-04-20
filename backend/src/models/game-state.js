@@ -1,7 +1,7 @@
-import { config } from '../config/config';
-import { TerrainFactory } from "../utils/terrain-factory";
+const config = require('../config/config');
+const TerrainFactory = require('../utils/terrain-factory');
 
-export class GameState {
+class GameState {
     constructor() {
         this.players = [];
         this.terrain = [];
@@ -31,3 +31,5 @@ export class GameState {
         player.move(delta);
     }
 }
+
+module.exports = GameState;

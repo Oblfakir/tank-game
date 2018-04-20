@@ -1,5 +1,6 @@
-export class PlayerState {
-    constructor(coordinates, direction) {
+class PlayerState {
+    constructor(coordinates, direction, id) {
+        this.id = id;
         this.coordinates = coordinates;
         this.direction = direction;
     }
@@ -9,3 +10,5 @@ export class PlayerState {
         this.coordinates.y += y;
     }
 }
+
+module.exports = PlayerState;

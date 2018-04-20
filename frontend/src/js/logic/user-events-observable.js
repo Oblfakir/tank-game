@@ -1,15 +1,16 @@
-import { config } from '../config/config';
-import { UserEvent } from '../models/user-event';
-import { constants } from '../config/constants';
+import { Helpers } from '../utils/helpers';
+import { SocketService } from '../services/socket-service';
 
 export class UserEventsObservable {
-    constructor() {
+    constructor(socketService) {
         this.observers = [];
         this._listenUserEvents();
+        this.socketService = socketService;
     }
 
     fireEvent(event, thisObj) {
         const scope = thisObj || window;
+        this.socketService.emit(event);
         this.observers.forEach(observer => {
             observer.call(scope, event);
         });
@@ -25,31 +26,16 @@ export class UserEventsObservable {
 
     _listenUserEvents() {
         document.addEventListener('keydown', (event) => {
-            const userEvent = this._getUserEventObject(event.keyCode, true);
+            const userEvent = Helpers.getUserEventObject(event.keyCode, true);
             if (userEvent) {
                 this.fireEvent(userEvent);
             }
         });
         document.addEventListener('keyup', (event) => {
-            const userEvent = this._getUserEventObject(event.keyCode, false);
+            const userEvent = Helpers.getUserEventObject(event.keyCode, false);
             if (userEvent) {
                 this.fireEvent(userEvent);
             }
         });
-    }
-
-    _getUserEventObject(keyCode, status) {
-        switch (keyCode) {
-            case config.KEYS.up:
-                return new UserEvent(constants.events.click.up, status);
-            case config.KEYS.down:
-                return new UserEvent(constants.events.click.down, status);
-            case config.KEYS.left:
-                return new UserEvent(constants.events.click.left, status);
-            case config.KEYS.right:
-                return new UserEvent(constants.events.click.right, status);
-            case config.KEYS.fire:
-                return new UserEvent(constants.events.click.fire, status);
-        }
     }
 }

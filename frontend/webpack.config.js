@@ -12,7 +12,7 @@ const PATHS = {
 
 const commonConfig = merge([
     {
-        entry: `${PATHS.src}/index.js`,
+        entry: ['babel-polyfill', `${PATHS.src}/index.js`],
         output: {
             path: PATHS.build,
             filename: '[name].js'

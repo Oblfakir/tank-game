@@ -1,8 +1,8 @@
-import { config } from "../config/config";
-import { TerrainState } from "../models/terrain-state";
-import { constants } from "../config/constants";
+const config = require('../config/config');
+const TerrainState = require('../models/terrain-state');
+const constants = require('../config/constants');
 
-export class TerrainFactory {
+class TerrainFactory {
     constructor() {
         this.terrainWidth = config.CANVAS_SIZE / config.BLOCKS_COUNT;
     }
@@ -20,3 +20,5 @@ export class TerrainFactory {
         return constants.terrainTypes[arr[n]];
     }
 }
+
+module.exports = TerrainFactory;

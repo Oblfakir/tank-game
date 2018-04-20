@@ -1,14 +1,13 @@
 import { ViewState } from '../models/view-state';
 
 export class Renderer {
-    constructor(gameState, context) {
-        this.gameState = gameState;
+    constructor(context) {
         this.context = context;
         this.viewState = new ViewState(context);
     }
 
-    render() {
-        this.viewState.mapGameState(this.gameState);
+    render(gameState) {
+        this.viewState.mapGameState(gameState);
         this.viewState.render();
     }
 }
