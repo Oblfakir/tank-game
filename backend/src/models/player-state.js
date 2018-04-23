@@ -1,18 +1,18 @@
+const constants = require('../config/constants');
+const config = require('../config/config');
 const Helpers = require('../utils/helpers');
 
 class PlayerState {
-    constructor(coordinates, direction, id) {
-        this.id = id;
-        this.coordinates = coordinates;
-        this.direction = direction;
+    constructor() {
+        this.coordinates = config.player.initialCoordinates;
+        this.direction = constants.directions.up;
     }
 
     move(direction) {
         this.direction = direction;
-        const {x, y} = Helpers.getDeltaFromDirection(direction, 'for player');
         const nextPosition = {
-            x: this.coordinates.x + x,
-            y: this.coordinates.y + y
+            x: this.coordinates.x + this.direction.x * config.player.speed,
+            y: this.coordinates.y + this.direction.y * config.player.speed
         };
         if (Helpers.checkBoundaries(nextPosition)) {
             this.coordinates = nextPosition;

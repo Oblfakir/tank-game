@@ -15,28 +15,6 @@ class Helpers {
         }
     }
 
-    static getDeltaFromDirection(direction, target) {
-        let speed = 0;
-        if (target === 'for player') {
-            speed = config.player.speed;
-        }
-        if (target === 'for bullet') {
-            speed = config.bullet.speed;
-        }
-        switch (direction) {
-            case constants.directions.right:
-                return { x: speed, y: 0 };
-            case constants.directions.left:
-                return { x: -speed, y: 0 };
-            case constants.directions.up:
-                return { x: 0, y: -speed };
-            case constants.directions.down:
-                return { x: 0, y: speed };
-            default:
-                return { x:0, y:0 }
-        }
-    }
-
     static checkBulletIsInside(bulletPos, playerPos) {
         const size = config.player.size / 2 - 3;
         const inX = bulletPos.x >= playerPos.x - size && bulletPos.x <= playerPos.x + size;

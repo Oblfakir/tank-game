@@ -1,6 +1,6 @@
 const config = {
-    CANVAS_SIZE: 800,
-    BLOCKS_COUNT: 20,
+    CANVAS_SIZE: 600,
+    BLOCKS_COUNT: 15,
     KEYS: {
         up: 87,
         left: 65,
@@ -10,13 +10,12 @@ const config = {
     },
     player: {
         speed: 5,
-        size: 40,
-        lastId: 0,
+        size: 30,
+        initialCoordinates: {x: 100, y: 200}
     },
     bullet: {
         speed: 12,
         size: 5,
-        lastId: 0,
         fireDelay: 300
     }
 };
