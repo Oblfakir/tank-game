@@ -1,14 +1,24 @@
+import { Helpers } from "../utils/helpers";
+import { config } from '../config/config';
+
 export class PlayerView {
     constructor(state, context) {
         this.state = state;
         this.context = context;
+        this.img = new Image();
+        this.img.src = '../../assets/tank.jpg';
     }
 
     render() {
         const { x, y } = this.state.coordinates;
-        this.context.fillStyle = "#FF0000";
-        this.context.beginPath();
-        this.context.arc(x, y, 20, 0, 2 * Math.PI);
-        this.context.fill();
+        const width = config.player.size;
+        const height = config.player.size;
+        const angle = Helpers.getAngleByDirection(this.state.direction);
+
+        this.context.translate(x, y);
+        this.context.rotate(angle);
+        this.context.drawImage(this.img, -width / 2, -height / 2, width, height);
+        this.context.rotate(-angle);
+        this.context.translate(-x, -y);
     }
 }

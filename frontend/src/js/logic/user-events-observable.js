@@ -1,5 +1,4 @@
 import { Helpers } from '../utils/helpers';
-import { SocketService } from '../services/socket-service';
 
 export class UserEventsObservable {
     constructor(socketService) {

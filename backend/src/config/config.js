@@ -10,7 +10,7 @@ const config = {
     },
     player: {
         speed: 5,
-        size: 20,
+        size: 40,
         lastId: 0
     }
 };

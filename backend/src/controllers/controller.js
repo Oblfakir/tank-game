@@ -27,6 +27,7 @@ class Controller {
                     x: this.player.coordinates.x + delta.x,
                     y: this.player.coordinates.y + delta.y
                 };
+                this.player.direction = this.currentDirection;
                 if (Helpers.checkBoundaries(nextPosition)) {
                     this.gameState.movePlayer(this.player, delta);
                 }
@@ -37,13 +38,8 @@ class Controller {
 
     _listenEvents() {
         this.observable.subscribe((event) => {
-            if (event.status) {
-                this.currentDirection = Helpers.getDirectionFromEvent(event);
-                this.isPlayerMoving = true;
-            } else {
-                this.isPlayerMoving = false;
-                this.currentDirection = undefined;
-            }
+            this.currentDirection = Helpers.getDirectionFromEvent(event);
+            this.isPlayerMoving = event.status;
         });
     }
 }

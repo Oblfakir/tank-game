@@ -1,4 +1,3 @@
-const Helpers = require('../utils/helpers');
 const constants = require('../config/constants');
 
 class UserEventsObservable {

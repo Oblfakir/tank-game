@@ -1,4 +1,5 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const config = require('./config/config');
@@ -15,9 +16,7 @@ const PATHS = {
 
 app.use(cors());
 
-app.get('/', (req, res) => {
-    res.sendFile(PATHS.static + '/index.html');
-});
+app.use('/', express.static(PATHS.static));
 
 app.get('/config', (req, res) => {
     res.send(JSON.stringify(config));

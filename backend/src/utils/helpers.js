@@ -1,6 +1,5 @@
 const config = require('../config/config');
 const constants = require('../config/constants');
-const UserEvent = require('../models/user-event');
 
 class Helpers {
     static getDirectionFromEvent(event) {
