@@ -1,5 +1,5 @@
 const constants = {
-    socketUserActionName: 'user action',
+    socketUserActionName: 'user move action',
     socketStateReceiveActionName: 'state receive action',
     directions: {
         up: 'upDirection',

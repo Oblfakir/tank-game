@@ -1,11 +1,13 @@
-import { TerrainView } from "../view/terrain-view";
-import { PlayerView } from "../view/player-view";
+import { TerrainView } from '../view/terrain-view';
+import { PlayerView } from '../view/player-view';
+import { BulletView } from '../view/bullet-view';
 
 export class ViewState {
     constructor(context) {
         this.context = context;
         this.players = [];
         this.terrain = [];
+        this.bullets = [];
     }
 
     mapGameState(gameState) {
@@ -13,10 +15,12 @@ export class ViewState {
             tarr.map(t => new TerrainView(t, this.context))
         );
         this.players = gameState.players.map(p => new PlayerView(p, this.context));
+        this.bullets = gameState.bullets.map(b => new BulletView(b, this.context));
     }
 
     render() {
         this.terrain.forEach(tarr => tarr.forEach(t => t.render()));
         this.players.forEach(p => p.render());
+        this.bullets.forEach(b => b.render());
     }
 }

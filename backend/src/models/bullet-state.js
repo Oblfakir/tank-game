@@ -1,23 +1,24 @@
 const Helpers = require('../utils/helpers');
 
-class PlayerState {
+class BulletState {
     constructor(coordinates, direction, id) {
         this.id = id;
         this.coordinates = coordinates;
         this.direction = direction;
     }
 
-    move(direction) {
-        this.direction = direction;
-        const {x, y} = Helpers.getDeltaFromDirection(direction, 'for player');
+    move() {
+        const {x, y} = Helpers.getDeltaFromDirection(this.direction, 'for bullet');
         const nextPosition = {
             x: this.coordinates.x + x,
             y: this.coordinates.y + y
         };
-        if (Helpers.checkBoundaries(nextPosition)) {
+        const isInScreen = Helpers.checkBoundariesForBullet(nextPosition);
+        if (isInScreen) {
             this.coordinates = nextPosition;
         }
+        return isInScreen;
     }
 }
 
-module.exports = PlayerState;
+module.exports = BulletState;

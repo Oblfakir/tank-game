@@ -11,7 +11,13 @@ const config = {
     player: {
         speed: 5,
         size: 40,
-        lastId: 0
+        lastId: 0,
+    },
+    bullet: {
+        speed: 12,
+        size: 5,
+        lastId: 0,
+        fireDelay: 300
     }
 };
 

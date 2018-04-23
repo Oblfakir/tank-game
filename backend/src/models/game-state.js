@@ -5,6 +5,8 @@ class GameState {
     constructor() {
         this.players = [];
         this.terrain = [];
+        this.bullets = [];
+        this.bulletsToDelete = [];
         this._createTerrain();
     }
 
@@ -19,16 +21,30 @@ class GameState {
         }
     }
 
+    handleBulletsMovement() {
+        this.bullets.forEach(b => {
+            const isInScreen = b.move();
+            if (!isInScreen) {
+                this.bulletsToDelete.push(b);
+            }
+        });
+    }
+
+    addBullet(bullet) {
+        this.bullets.push(bullet);
+    }
+
+    removeOutOfScreenBullets() {
+        this.bullets = this.bullets.filter(b => this.bulletsToDelete.indexOf(b) === -1);
+        this.bulletsToDelete = [];
+    }
+
     addPlayer(player) {
         this.players.push(player);
     }
 
     removePlayer(player) {
         this.players = this.players.filter(x => x !== player);
-    }
-
-    movePlayer(player, delta) {
-        player.move(delta);
     }
 }
 

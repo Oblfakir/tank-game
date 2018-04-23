@@ -1,4 +1,5 @@
 const PlayerState = require('../models/player-state');
+const BulletState = require('../models/bullet-state');
 const constants = require('../config/constants');
 const config = require('../config/config');
 const Helpers = require('../utils/helpers');
@@ -12,6 +13,8 @@ class Controller {
 
         this.currentDirection = undefined;
         this.isPlayerMoving = false;
+        this.isPlayerFiring = false;
+        this.canPlayerFire = true;
 
         this.player = new PlayerState({x: 100, y: 200}, constants.directions.up, config.player.lastId);
         this.gameState.addPlayer(this.player);
@@ -21,25 +24,32 @@ class Controller {
 
     runMainLoop() {
         setInterval(() => {
-            if (this.isPlayerMoving) {
-                const delta = Helpers.getDeltaFromDirection(this.currentDirection);
-                const nextPosition = {
-                    x: this.player.coordinates.x + delta.x,
-                    y: this.player.coordinates.y + delta.y
-                };
-                this.player.direction = this.currentDirection;
-                if (Helpers.checkBoundaries(nextPosition)) {
-                    this.gameState.movePlayer(this.player, delta);
-                }
-            }
+            this.gameState.removeOutOfScreenBullets();
+            if (this.isPlayerMoving) this.player.move(this.currentDirection);
+            if (this.isPlayerFiring) this._playerFireHandler();
+            this.gameState.handleBulletsMovement();
             this.io.emit(constants.socketStateReceiveActionName, JSON.stringify(this.gameState));
         }, 1000 / 60);
     }
 
+    _playerFireHandler() {
+        if (this.canPlayerFire) {
+            this.gameState.addBullet(new BulletState(this.player.coordinates,
+                this.currentDirection, config.bullet.lastId++));
+            this.canPlayerFire = false;
+            setTimeout(() => {
+                this.canPlayerFire = true;
+            }, config.bullet.fireDelay);
+        }
+    }
+
     _listenEvents() {
         this.observable.subscribe((event) => {
-            this.currentDirection = Helpers.getDirectionFromEvent(event);
-            this.isPlayerMoving = event.status;
+            const direction = Helpers.getDirectionFromEvent(event);
+            this.currentDirection = direction || this.currentDirection;
+            const isFireEvent = !direction;
+            this.isPlayerMoving = !isFireEvent ? event.status : false;
+            this.isPlayerFiring = isFireEvent ? event.status : false;
         });
     }
 }

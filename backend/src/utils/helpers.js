@@ -15,23 +15,35 @@ class Helpers {
         }
     }
 
-    static getDeltaFromDirection(direction) {
+    static getDeltaFromDirection(direction, target) {
+        let speed = 0;
+        if (target === 'for player') {
+            speed = config.player.speed;
+        }
+        if (target === 'for bullet') {
+            speed = config.bullet.speed;
+        }
         switch (direction) {
             case constants.directions.right:
-                return { x: config.player.speed, y: 0 };
+                return { x: speed, y: 0 };
             case constants.directions.left:
-                return { x: -config.player.speed, y: 0 };
+                return { x: -speed, y: 0 };
             case constants.directions.up:
-                return { x: 0, y: -config.player.speed };
+                return { x: 0, y: -speed };
             case constants.directions.down:
-                return { x: 0, y: config.player.speed };
+                return { x: 0, y: speed };
             default:
                 return { x:0, y:0 }
         }
     }
 
-    static checkBoundaries({x, y}) {
+    static checkBoundariesForBullet({x, y}) {
         return x > 0 && x < config.CANVAS_SIZE && y > 0 && y < config.CANVAS_SIZE;
+    }
+
+    static checkBoundaries({x, y}) {
+        const size = config.player.size / 2 - 3;
+        return x > size && x < config.CANVAS_SIZE - size && y > size && y < config.CANVAS_SIZE - size;
     }
 }
 

@@ -7,8 +7,8 @@ export class SocketService {
         this.socket = io(config.host);
     }
 
-    emit(data) {
-        this.socket.emit(constants.socketUserActionName, data);
+    emit(event) {
+        this.socket.emit(constants.socketUserActionName, event);
     }
 
     subscribeToSocketEvents(callback) {
