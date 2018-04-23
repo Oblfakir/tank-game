@@ -19,17 +19,11 @@ class Controller {
         this.player = new PlayerState({x: 100, y: 200}, constants.directions.up, config.player.lastId);
         this.gameState.addPlayer(this.player);
         this._listenEvents();
-        this.runMainLoop();
     }
 
-    runMainLoop() {
-        setInterval(() => {
-            this.gameState.removeOutOfScreenBullets();
-            if (this.isPlayerMoving) this.player.move(this.currentDirection);
-            if (this.isPlayerFiring) this._playerFireHandler();
-            this.gameState.handleBulletsMovement();
-            this.io.emit(constants.socketStateReceiveActionName, JSON.stringify(this.gameState));
-        }, 1000 / 60);
+    handleMainTick() {
+        if (this.isPlayerMoving) this.player.move(this.currentDirection);
+        if (this.isPlayerFiring) this._playerFireHandler();
     }
 
     _playerFireHandler() {
