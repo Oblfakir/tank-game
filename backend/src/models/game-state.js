@@ -1,5 +1,6 @@
 const config = require('../config/config');
 const TerrainFactory = require('../utils/terrain-factory');
+const Helpers = require('../utils/helpers');
 
 class GameState {
     constructor() {
@@ -7,18 +8,8 @@ class GameState {
         this.terrain = [];
         this.bullets = [];
         this.bulletsToDelete = [];
+        this.playersToDelete = [];
         this._createTerrain();
-    }
-
-    _createTerrain() {
-        const terrainFactory = new TerrainFactory();
-        for (let i = 0; i < config.BLOCKS_COUNT; i++) {
-            const arr = [];
-            for (let j = 0; j < config.BLOCKS_COUNT; j++) {
-                arr.push(terrainFactory.getTerrain({i, j}));
-            }
-            this.terrain.push(arr);
-        }
     }
 
     handleBulletsMovement() {
@@ -30,21 +21,44 @@ class GameState {
         });
     }
 
-    addBullet(bullet) {
-        this.bullets.push(bullet);
-    }
-
     removeOutOfScreenBullets() {
         this.bullets = this.bullets.filter(b => this.bulletsToDelete.indexOf(b) === -1);
         this.bulletsToDelete = [];
+    }
+
+    checkBulletsHitting() {
+        this.bullets.forEach(b => {
+            this.players.filter(x => x !== b.player).forEach(p => {
+                if (Helpers.checkBulletIsInside(b.coordinates, p.coordinates)) {
+                    this.playersToDelete.push(p);
+                    this.bulletsToDelete.push(b);
+                }
+            });
+        });
+    }
+
+    removeDeadPlayers() {
+        this.players = this.players.filter(p => this.playersToDelete.indexOf(p) === -1);
+        this.playersToDelete = [];
+    }
+
+    addBullet(bullet) {
+        this.bullets.push(bullet);
     }
 
     addPlayer(player) {
         this.players.push(player);
     }
 
-    removePlayer(player) {
-        this.players = this.players.filter(x => x !== player);
+    _createTerrain() {
+        const terrainFactory = new TerrainFactory();
+        for (let i = 0; i < config.BLOCKS_COUNT; i++) {
+            const arr = [];
+            for (let j = 0; j < config.BLOCKS_COUNT; j++) {
+                arr.push(terrainFactory.getTerrain({i, j}));
+            }
+            this.terrain.push(arr);
+        }
     }
 }
 

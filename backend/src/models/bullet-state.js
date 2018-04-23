@@ -1,8 +1,9 @@
 const Helpers = require('../utils/helpers');
 
 class BulletState {
-    constructor(coordinates, direction, id) {
+    constructor(coordinates, direction, id, player) {
         this.id = id;
+        this.player = player;
         this.coordinates = coordinates;
         this.direction = direction;
     }

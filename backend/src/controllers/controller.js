@@ -28,8 +28,9 @@ class Controller {
 
     _playerFireHandler() {
         if (this.canPlayerFire) {
-            this.gameState.addBullet(new BulletState(this.player.coordinates,
-                this.currentDirection, config.bullet.lastId++));
+            const bullet = new BulletState(this.player.coordinates,
+                this.currentDirection, config.bullet.lastId++, this.player);
+            this.gameState.addBullet(bullet);
             this.canPlayerFire = false;
             setTimeout(() => {
                 this.canPlayerFire = true;

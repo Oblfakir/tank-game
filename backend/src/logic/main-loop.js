@@ -14,9 +14,7 @@ class MainLoop {
 
     _run() {
         setInterval(() => {
-            this.gameState.removeOutOfScreenBullets();
             this.callbacks.forEach(c => c());
-            this.gameState.handleBulletsMovement();
             this.io.emit(constants.socketStateReceiveActionName, JSON.stringify(this.gameState));
         }, 1000 / 60);
     }
