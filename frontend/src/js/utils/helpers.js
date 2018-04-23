@@ -21,13 +21,13 @@ export class Helpers {
     static getAngleByDirection(direction) {
         switch (direction.name) {
             case constants.directions.up.name:
-                return Math.PI / 2;
-            case constants.directions.down.name:
-                return -Math.PI / 2;
-            case constants.directions.left.name:
                 return 0;
-            case constants.directions.right.name:
+            case constants.directions.down.name:
                 return Math.PI;
+            case constants.directions.left.name:
+                return - Math.PI / 2;
+            case constants.directions.right.name:
+                return  Math.PI / 2;
         }
     }
 }

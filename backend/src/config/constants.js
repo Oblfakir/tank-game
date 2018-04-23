@@ -18,7 +18,6 @@ const constants = {
     },
     terrainTypes: {
         grass: 'grassTerrain',
-        earth: 'earthTerrain',
         stone: 'stoneTerrain',
         wall: 'wallTerrain'
     }

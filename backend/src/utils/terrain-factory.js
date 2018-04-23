@@ -16,8 +16,14 @@ class TerrainFactory {
 
     static getRandomType() {
         const arr = Object.keys(constants.terrainTypes);
-        const n = Math.floor(Math.random() * Math.floor(arr.length));
-        return constants.terrainTypes[arr[n]];
+        const rand = Math.random();
+        if (rand < 0.5) {
+            return constants.terrainTypes[arr[0]];
+        } else if (rand > 0.5 && rand < 0.75) {
+            return constants.terrainTypes[arr[1]];
+        } else {
+            return constants.terrainTypes[arr[2]];
+        }
     }
 }
 
