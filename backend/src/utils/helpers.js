@@ -40,21 +40,18 @@ class Helpers {
     static checkTerrainInDirection(player, terrainInDirection) {
         if (!terrainInDirection) return true;
         if (terrainInDirection.type === constants.terrainTypes.grass) return true;
-
         const size = config.player.size / 2;
         const { x, y } = player.coordinates;
         let { xMin, yMin, xMax, yMax } = terrainInDirection;
 
         if (player.direction === constants.directions.up ||
             player.direction === constants.directions.down) {
-            const dy = Math.min(Math.abs(yMin - y), Math.abs(yMax - y));
-            return dy > size;
+            return Math.min(Math.abs(yMin - y), Math.abs(yMax - y)) > size + config.player.speed;
         }
 
         if (player.direction === constants.directions.left ||
             player.direction === constants.directions.right) {
-            const dx = Math.min(Math.abs(xMin - x), Math.abs(xMax - x));
-            return dx > size;
+            return Math.min(Math.abs(xMin - x), Math.abs(xMax - x)) > size;
         }
     }
 }

@@ -8,14 +8,15 @@ class PlayerState {
         this.direction = constants.directions.up;
     }
 
-    move(direction, terrainInDirection) {
+    move(direction, terrainInDirection1, terrainInDirection2) {
         this.direction = direction;
         const nextPosition = {
             x: this.coordinates.x + this.direction.x * config.player.speed,
             y: this.coordinates.y + this.direction.y * config.player.speed
         };
         if (Helpers.checkBoundaries(nextPosition) &&
-            Helpers.checkTerrainInDirection(this, terrainInDirection)) {
+            Helpers.checkTerrainInDirection(this, terrainInDirection1) &&
+            Helpers.checkTerrainInDirection(this, terrainInDirection2)) {
             this.coordinates = nextPosition;
         }
     }

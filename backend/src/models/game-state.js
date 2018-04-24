@@ -69,9 +69,10 @@ class GameState {
         this.players.push(player);
     }
 
-    getTerrainInDirection(player) {
-        const indexes = this._findPlayerPositionTerrain(player.coordinates);
-        return this._getRelativeTerrain(indexes, player.direction);
+    getTerrainInDirection(coordinates, direction) {
+        const indexes = this._findTerrainByCoordinates(coordinates);
+        if (!indexes) return;
+        return this._getRelativeTerrain(indexes, direction);
     }
 
     _getRelativeTerrain({i, j}, direction) {
@@ -93,7 +94,7 @@ class GameState {
         }
     }
 
-    _findPlayerPositionTerrain({x, y}) {
+    _findTerrainByCoordinates({x, y}) {
         for (let i = 0; i < config.BLOCKS_COUNT; i++) {
             for (let j = 0; j < config.BLOCKS_COUNT; j++) {
                 let { xMin, yMin, xMax, yMax } = this.terrain[i][j];

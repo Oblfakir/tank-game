@@ -2,6 +2,7 @@ const PlayerState = require('../models/player-state');
 const BulletState = require('../models/bullet-state');
 const config = require('../config/config');
 const Helpers = require('../utils/helpers');
+const constants = require("../config/constants");
 
 class Controller {
     constructor(observable, gameState, socket, io) {
@@ -22,8 +23,38 @@ class Controller {
 
     handleMainTick() {
         if (this.isPlayerMoving) {
+            const size = config.player.size / 2 - 3;
+            let d1;
+            let d2;
+            let { x, y } = this.player.coordinates;
+
+            const nextPosition = {
+                x: x + this.currentDirection.x * config.player.speed,
+                y: y + this.currentDirection.y * config.player.speed
+            };
+
+            switch (this.currentDirection) {
+                case constants.directions.up:
+                    d1 = { x: nextPosition.x + size, y: nextPosition.y - size};
+                    d2 = { x: nextPosition.x - size, y: nextPosition.y - size};
+                    break;
+                case constants.directions.down:
+                    d1 = { x: nextPosition.x + size, y: nextPosition.y + size};
+                    d2 = { x: nextPosition.x - size, y: nextPosition.y + size};
+                    break;
+                case constants.directions.left:
+                    d1 = { x: nextPosition.x + size, y: nextPosition.y + size};
+                    d2 = { x: nextPosition.x + size, y: nextPosition.y - size};
+                    break;
+                case constants.directions.right:
+                    d1 = { x: nextPosition.x - size, y: nextPosition.y + size};
+                    d2 = { x: nextPosition.x - size, y: nextPosition.y - size};
+                    break;
+            }
+
             this.player.move(this.currentDirection,
-                this.gameState.getTerrainInDirection(this.player));
+                this.gameState.getTerrainInDirection(d1, this.currentDirection),
+                this.gameState.getTerrainInDirection(d2, this.currentDirection));
         }
         if (this.isPlayerFiring) this._playerFireHandler();
     }
