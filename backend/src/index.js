@@ -6,12 +6,15 @@ const config = require('./config/config');
 const constants = require('./config/constants');
 const cors = require('cors');
 const Main = require('./main');
+const roomsRouter = require('./rooms-router');
 
 const PATHS = {
     static: __dirname + '/static'
 };
 
 app.use(cors());
+
+app.use('/rooms', roomsRouter);
 
 app.use('/', express.static(PATHS.static));
 
@@ -25,6 +28,7 @@ app.get('/constants', (req, res) => {
 
 Main.start(io);
 
-http.listen(1234, () => {
-    console.log('listening on *:1234');
+const port = 1234;
+http.listen(port, () => {
+    console.log(`Server listening at port ${port}`);
 });

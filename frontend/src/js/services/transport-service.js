@@ -2,16 +2,18 @@ import { config } from '../config/config';
 
 export class TransportService {
     static async getConfig() {
-        if (!TransportService.config) {
-            TransportService.config = await fetch(config.configUrl);
-        }
-        return TransportService.config;
+        return await fetch(config.configUrl);
     }
 
     static async getConstants() {
-        if (!TransportService.constants) {
-            TransportService.constants = await fetch(config.constantsUrl);
-        }
-        return TransportService.constants;
+        return await fetch(config.constantsUrl);
+    }
+
+    static async getRooms() {
+        return await fetch(config.roomsUrl);
+    }
+
+    static async addRoom() {
+        return await fetch(config.roomsUrl, { method: 'POST' });
     }
 }

@@ -6,10 +6,11 @@ import { constants } from './config/constants';
 import { SocketService } from "./services/socket-service";
 
 window.onload = async () => {
-    Object.assign(config, await getConfig());
-    Object.assign(constants, await getConstants());
-    setCanvasSize();
-    subscribeToUserEvents();
+    await loadRooms();
+    document.querySelector('.create-room').addEventListener('click', async () => {
+        await TransportService.addRoom();
+        await loadRooms();
+    });
 };
 
 async function getConfig() {
@@ -20,6 +21,13 @@ async function getConfig() {
 async function getConstants() {
     const constants = await TransportService.getConstants();
     return await constants.json()
+}
+
+async function onRoomJoin() {
+    Object.assign(config, await getConfig());
+    Object.assign(constants, await getConstants());
+    setCanvasSize();
+    subscribeToUserEvents();
 }
 
 function setCanvasSize() {
@@ -33,4 +41,35 @@ function subscribeToUserEvents() {
     const socketService = new SocketService();
     const observable = new UserEventsObservable(socketService);
     const controller = new Controller(observable, context, socketService);
+}
+
+async function loadRooms() {
+    const roomsContainer = document.querySelector('.rooms-container');
+    while (roomsContainer.firstChild) {
+        roomsContainer.removeChild(roomsContainer.firstChild);
+    }
+    const rooms = [];
+    const roomsData = await TransportService.getRooms();
+    const roomsJson = await roomsData.json();
+
+    console.log(roomsJson);
+
+    roomsJson.forEach(room => {
+        const roomElement = document.createElement('div');
+        roomElement.classList.add('room');
+        const roomName = document.createElement('span');
+        roomName.classList.add('room__name');
+        roomName.textContent = room.name;
+        const roomJoinButton = document.createElement('button');
+        roomJoinButton.classList.add('room__join-button');
+        roomJoinButton.textContent = 'Join';
+        roomJoinButton.dataset.roomName = room.name;
+        roomElement.appendChild(roomName);
+        roomElement.appendChild(roomJoinButton);
+        rooms.push(roomElement);
+    });
+
+    rooms.forEach(room => {
+        roomsContainer.appendChild(room);
+    });
 }
