@@ -5,8 +5,60 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background: url("../assets/background.png") no-repeat;
+  background-size: cover;
+}
 
-  #canvas {
-    border: 1px solid lightgray;
+.rooms-container {
+  width: 600px;
+  height: 400px;
+  background: forestgreen;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+
+  .create-room {
+    height: 30px;
+    width: 200px;
+    font-size: 20px;
   }
+
+  .room {
+    width: 80%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    padding: 10px 20px;
+    background: darkgreen;
+    margin: 10px 0;
+
+    &__name {
+      color: white;
+      font-size: 24px;
+    }
+
+    &__join-button {
+      height: 30px;
+      width: 100px;
+      font-size: 20px;
+    }
+  }
+}
+
+.canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#canvas {
+  border: 1px solid lightgray;
+}
+
+.no-display {
+  display: none;
 }
