@@ -15,10 +15,16 @@ class Helpers {
         }
     }
 
-    static checkBulletIsInside(bulletPos, playerPos) {
+    static checkBulletIsHittingPlayer(bulletPos, playerPos) {
         const size = config.player.size / 2 - 3;
         const inX = bulletPos.x >= playerPos.x - size && bulletPos.x <= playerPos.x + size;
         const inY = bulletPos.y >= playerPos.y - size && bulletPos.y <= playerPos.y + size;
+        return inX && inY;
+    }
+
+    static checkBulletIsHittingBarrier(bulletPos, barrier) {
+        const inX = bulletPos.x >= barrier.xMin && bulletPos.x <= barrier.xMax;
+        const inY = bulletPos.y >= barrier.yMin && bulletPos.y <= barrier.yMax;
         return inX && inY;
     }
 

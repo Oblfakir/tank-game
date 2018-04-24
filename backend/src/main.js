@@ -11,6 +11,7 @@ class Main {
         mainLoop.addCallback(gameState.removeOutOfScreenBullets.bind(gameState));
         mainLoop.addCallback(gameState.checkBulletsHitting.bind(gameState));
         mainLoop.addCallback(gameState.removeDeadPlayers.bind(gameState));
+        mainLoop.addCallback(gameState.removeBrokenWalls.bind(gameState));
 
         io.on('connection', (socket) => {
             const observable = new UserEventsObservable(socket);
