@@ -3,14 +3,20 @@ const router = express.Router();
 const Rooms = require('./models/rooms');
 
 const rooms = new Rooms();
+const Main = require('./main');
 
 router.route('/')
-    .get(function (req, res) {
-        res.send(rooms.getRooms());
+    .get((req, res) => {
+        res.send(JSON.stringify(rooms.getRooms()));
     })
-    .post(function (req, res) {
-        rooms.addRoom();
+    .post((req, res) => {
+        rooms.addRoom(new Main().start(req.io));
         res.send('ok');
+    });
+
+router.route(':name/join')
+    .post((req, res) => {
+
     });
 
 module.exports = router;

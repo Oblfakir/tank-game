@@ -5,18 +5,21 @@ class Rooms {
         this.lastRoomNumber = 2;
     }
 
-    addRoom() {
-        this.rooms.push(new Room(this.lastRoomNumber++));
+    addRoom(main) {
+        const room = new Room(this.lastRoomNumber++, main);
+        this.rooms.push(room);
+        return room.name;
     }
 
     getRooms() {
-        return JSON.stringify(this.rooms);
+        return this.rooms;
     }
 }
 
 class Room {
-    constructor(number) {
+    constructor(number, main) {
         this.name = `room${number}`;
+        this.main = main;
     }
 }
 
