@@ -54,6 +54,37 @@ class Helpers {
             return Math.min(Math.abs(xMin - x), Math.abs(xMax - x)) > size;
         }
     }
+
+    static getPlayerFrontPoints({ x, y }, direction) {
+        const size = config.player.size / 2 - 3;
+        const nextPosition = {
+            x: x + direction.x * config.player.speed,
+            y: y + direction.y * config.player.speed
+        };
+
+        switch (direction) {
+            case constants.directions.up:
+                return {
+                    d1: { x: nextPosition.x + size, y: nextPosition.y - size},
+                    d2: { x: nextPosition.x - size, y: nextPosition.y - size}
+                };
+            case constants.directions.down:
+                return {
+                    d1: { x: nextPosition.x + size, y: nextPosition.y + size},
+                    d2: { x: nextPosition.x - size, y: nextPosition.y + size}
+                };
+            case constants.directions.left:
+                return {
+                    d1: { x: nextPosition.x + size, y: nextPosition.y + size},
+                    d2: { x: nextPosition.x + size, y: nextPosition.y - size}
+                };
+            case constants.directions.right:
+                return {
+                    d1: { x: nextPosition.x - size, y: nextPosition.y + size},
+                    d2: { x: nextPosition.x - size, y: nextPosition.y - size}
+                };
+        }
+    }
 }
 
 module.exports = Helpers;

@@ -23,35 +23,7 @@ class Controller {
 
     handleMainTick() {
         if (this.isPlayerMoving) {
-            const size = config.player.size / 2 - 3;
-            let d1;
-            let d2;
-            let { x, y } = this.player.coordinates;
-
-            const nextPosition = {
-                x: x + this.currentDirection.x * config.player.speed,
-                y: y + this.currentDirection.y * config.player.speed
-            };
-
-            switch (this.currentDirection) {
-                case constants.directions.up:
-                    d1 = { x: nextPosition.x + size, y: nextPosition.y - size};
-                    d2 = { x: nextPosition.x - size, y: nextPosition.y - size};
-                    break;
-                case constants.directions.down:
-                    d1 = { x: nextPosition.x + size, y: nextPosition.y + size};
-                    d2 = { x: nextPosition.x - size, y: nextPosition.y + size};
-                    break;
-                case constants.directions.left:
-                    d1 = { x: nextPosition.x + size, y: nextPosition.y + size};
-                    d2 = { x: nextPosition.x + size, y: nextPosition.y - size};
-                    break;
-                case constants.directions.right:
-                    d1 = { x: nextPosition.x - size, y: nextPosition.y + size};
-                    d2 = { x: nextPosition.x - size, y: nextPosition.y - size};
-                    break;
-            }
-
+            const {d1, d2} = Helpers.getPlayerFrontPoints(this.player.coordinates, this.currentDirection);
             this.player.move(this.currentDirection,
                 this.gameState.getTerrainInDirection(d1, this.currentDirection),
                 this.gameState.getTerrainInDirection(d2, this.currentDirection));
