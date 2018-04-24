@@ -22,7 +22,7 @@ export class ViewState {
 
     render() {
         this.terrain.forEach(tarr => tarr.forEach(t => t.render()));
-        this.players.forEach(p => p.render());
         this.bullets.forEach(b => b.render());
+        this.players.forEach(p => p.render());
     }
 }

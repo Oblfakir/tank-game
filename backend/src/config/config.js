@@ -11,7 +11,7 @@ const config = {
     player: {
         speed: 5,
         size: 30,
-        initialCoordinates: {x: 100, y: 200}
+        initialCoordinates: {x: 20, y: 20}
     },
     bullet: {
         speed: 12,

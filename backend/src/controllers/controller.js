@@ -21,7 +21,10 @@ class Controller {
     }
 
     handleMainTick() {
-        if (this.isPlayerMoving) this.player.move(this.currentDirection);
+        if (this.isPlayerMoving) {
+            this.player.move(this.currentDirection,
+                this.gameState.getTerrainInDirection(this.player));
+        }
         if (this.isPlayerFiring) this._playerFireHandler();
     }
 

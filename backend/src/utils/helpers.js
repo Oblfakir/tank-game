@@ -22,13 +22,34 @@ class Helpers {
         return inX && inY;
     }
 
-    static checkBoundariesForBullet({x, y}) {
+    static checkBoundariesForBullet({ x, y }) {
         return x > 0 && x < config.CANVAS_SIZE && y > 0 && y < config.CANVAS_SIZE;
     }
 
-    static checkBoundaries({x, y}) {
+    static checkBoundaries({ x, y }) {
         const size = config.player.size / 2 - 3;
         return x > size && x < config.CANVAS_SIZE - size && y > size && y < config.CANVAS_SIZE - size;
+    }
+
+    static checkTerrainInDirection(player, terrainInDirection) {
+        if (!terrainInDirection) return true;
+        if (terrainInDirection.type === constants.terrainTypes.grass) return true;
+
+        const size = config.player.size / 2;
+        const { x, y } = player.coordinates;
+        let { xMin, yMin, xMax, yMax } = terrainInDirection;
+
+        if (player.direction === constants.directions.up ||
+            player.direction === constants.directions.down) {
+            const dy = Math.min(Math.abs(yMin - y), Math.abs(yMax - y));
+            return dy > size;
+        }
+
+        if (player.direction === constants.directions.left ||
+            player.direction === constants.directions.right) {
+            const dx = Math.min(Math.abs(xMin - x), Math.abs(xMax - x));
+            return dx > size;
+        }
     }
 }
 

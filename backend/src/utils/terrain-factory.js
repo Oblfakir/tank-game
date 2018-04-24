@@ -9,9 +9,9 @@ class TerrainFactory {
 
     getTerrain({i, j}, terrainType) {
         return new TerrainState({
-                x: i * this.terrainWidth,
-                y: j * this.terrainWidth },
-            terrainType || TerrainFactory.getRandomType())
+                y: i * this.terrainWidth,
+                x: j * this.terrainWidth },
+            terrainType || TerrainFactory.getRandomType(), this.terrainWidth)
     }
 
     static getRandomType() {
