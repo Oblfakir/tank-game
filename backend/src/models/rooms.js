@@ -4,10 +4,10 @@ class Rooms {
         this.lastRoomNumber = 1;
     }
 
-    addRoom() {
-        const room = new Room(this.lastRoomNumber++);
+    addRoom(gameState) {
+        const room = new Room(this.lastRoomNumber++, gameState);
         this.rooms.push(room);
-        return room.name;
+        return room;
     }
 
     getRooms() {
@@ -16,8 +16,9 @@ class Rooms {
 }
 
 class Room {
-    constructor(number) {
+    constructor(number, gameState) {
         this.name = `room${number}`;
+        this.gameState = gameState;
     }
 }
 

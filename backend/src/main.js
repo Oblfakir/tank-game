@@ -1,26 +1,28 @@
-const GameState = require('./models/game-state');
+
 const UserEventsObservable = require('./logic/user-events-observable');
 const Controller = require('./controllers/controller');
 const MainLoop = require('./logic/main-loop');
 const constants = require('./config/constants');
 
 class Main {
-    start(io, roomName) {
-        const gameState = new GameState();
-        const mainLoop = new MainLoop(gameState, io, roomName);
-        mainLoop.addCallback(gameState.handleBulletsMovement.bind(gameState));
-        mainLoop.addCallback(gameState.removeOutOfScreenBullets.bind(gameState));
-        mainLoop.addCallback(gameState.checkBulletsHitting.bind(gameState));
-        mainLoop.addCallback(gameState.removeDeadPlayers.bind(gameState));
-        mainLoop.addCallback(gameState.removeBrokenWalls.bind(gameState));
+    start(io, room) {
+        const mainLoop = new MainLoop(room.gameState, io, room.name);
+        mainLoop.addCallback(room.gameState.handleBulletsMovement.bind(room.gameState));
+        mainLoop.addCallback(room.gameState.removeOutOfScreenBullets.bind(room.gameState));
+        mainLoop.addCallback(room.gameState.checkBulletsHitting.bind(room.gameState));
+        mainLoop.addCallback(room.gameState.removeDeadPlayers.bind(room.gameState));
+        mainLoop.addCallback(room.gameState.removeBrokenWalls.bind(room.gameState));
 
         io.on('connection', (socket) => {
-            socket.on(constants.socketJoinRoomActionName, (room) => {
-                socket.join(room);
+            socket.on(constants.socketJoinRoomActionName, roomName => {
+                if (room.name === roomName) {
+                    socket.join(roomName, () => {
+                        const observable = new UserEventsObservable(socket);
+                        const controller = new Controller(observable, room.gameState);
+                        mainLoop.addCallback(controller.handleMainTick.bind(controller));
+                    });
+                }
             });
-            const observable = new UserEventsObservable(socket);
-            const controller = new Controller(observable, gameState);
-            mainLoop.addCallback(controller.handleMainTick.bind(controller));
         });
     }
 }

@@ -1,7 +1,8 @@
 import { Helpers } from '../utils/helpers';
 
 export class UserEventsObservable {
-    constructor(socketService) {
+    constructor(socketService, roomName) {
+        this.roomName = roomName;
         this.observers = [];
         this._listenUserEvents();
         this.socketService = socketService;
@@ -25,13 +26,13 @@ export class UserEventsObservable {
 
     _listenUserEvents() {
         document.addEventListener('keydown', (event) => {
-            const userEvent = Helpers.getUserEventObject(event.keyCode, true);
+            const userEvent = Helpers.getUserEventObject(event.keyCode, true, this.roomName);
             if (userEvent) {
                 this.fireEvent(userEvent);
             }
         });
         document.addEventListener('keyup', (event) => {
-            const userEvent = Helpers.getUserEventObject(event.keyCode, false);
+            const userEvent = Helpers.getUserEventObject(event.keyCode, false, this.roomName);
             if (userEvent) {
                 this.fireEvent(userEvent);
             }

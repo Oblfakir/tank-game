@@ -24,7 +24,7 @@ async function onRoomJoin(roomName) {
 function initializeGame(roomName) {
     const context = document.getElementById('canvas').getContext('2d');
     const socketService = new SocketService(roomName);
-    const observable = new UserEventsObservable(socketService);
+    const observable = new UserEventsObservable(socketService, roomName);
     const controller = new Controller(observable, context, socketService);
 
     document.querySelector('.rooms').classList.toggle('no-display');

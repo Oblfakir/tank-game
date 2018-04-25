@@ -3,19 +3,26 @@ import { config } from '../config/config';
 import { UserEvent } from '../models/user-event';
 
 export class Helpers {
-    static getUserEventObject(keyCode, status) {
+    static getUserEventObject(keyCode, status, roomName) {
+        let event;
         switch (keyCode) {
             case config.KEYS.up:
-                return new UserEvent(constants.events.click.up, status);
+                event = constants.events.click.up;
+                break;
             case config.KEYS.down:
-                return new UserEvent(constants.events.click.down, status);
+                event = constants.events.click.down;
+                break;
             case config.KEYS.left:
-                return new UserEvent(constants.events.click.left, status);
+                event = constants.events.click.left;
+                break;
             case config.KEYS.right:
-                return new UserEvent(constants.events.click.right, status);
+                event = constants.events.click.right;
+                break;
             case config.KEYS.fire:
-                return new UserEvent(constants.events.click.fire, status);
+                event = constants.events.click.fire;
+                break;
         }
+        return new UserEvent(event, status, roomName);
     }
 
     static getAngleByDirection(direction) {
@@ -25,9 +32,9 @@ export class Helpers {
             case constants.directions.down.name:
                 return Math.PI;
             case constants.directions.left.name:
-                return - Math.PI / 2;
+                return -Math.PI / 2;
             case constants.directions.right.name:
-                return  Math.PI / 2;
+                return Math.PI / 2;
         }
     }
 
