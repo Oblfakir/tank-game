@@ -1,14 +1,14 @@
 import { config } from './config/config';
-import { UserEventsObservable } from './logic/user-events-observable';
-import { Controller } from './controllers/controller';
 import { TransportService } from './services/transport-service';
 import { constants } from './config/constants';
-import { SocketService } from "./services/socket-service";
 import { Helpers } from "./utils/helpers";
+import { Connection } from './logic/connection';
+
+let connection
 
 window.onload = async () => {
     await loadRooms();
-    document.querySelector('.create-room').addEventListener('click', async () => {
+    document.getElementById('create-room').addEventListener('click', async () => {
         await TransportService.addRoom();
         await loadRooms();
     });
@@ -18,17 +18,20 @@ async function onRoomJoin(roomName) {
     Object.assign(config, await getConfig());
     Object.assign(constants, await getConstants());
     setCanvasSize();
-    initializeGame(roomName);
+    toggleVisibility();
+    connection = new Connection(roomName);
+    document.getElementById('leave-room').addEventListener('click', abortConnection);
 }
 
-function initializeGame(roomName) {
-    const context = document.getElementById('canvas').getContext('2d');
-    const socketService = new SocketService(roomName);
-    const observable = new UserEventsObservable(socketService, roomName);
-    const controller = new Controller(observable, context, socketService);
+function abortConnection() {
+    connection.abort();
+    toggleVisibility();
+}
 
-    document.querySelector('.rooms').classList.toggle('no-display');
-    document.querySelector('.canvas-container').classList.toggle('no-display');
+function toggleVisibility() {
+    document.getElementById('rooms').classList.toggle('no-display');
+    document.getElementById('canvas-container').classList.toggle('no-display');
+    document.getElementById('leave-room').classList.toggle('no-display');
 }
 
 async function getConfig() {
@@ -48,7 +51,7 @@ function setCanvasSize() {
 }
 
 async function loadRooms() {
-    const roomsContainer = document.querySelector('.rooms-container');
+    const roomsContainer = document.getElementById('rooms-container');
     while (roomsContainer.firstChild) {
         roomsContainer.removeChild(roomsContainer.firstChild);
     }

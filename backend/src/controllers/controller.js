@@ -28,6 +28,12 @@ class Controller {
         if (this.isPlayerFiring) this._playerFireHandler();
     }
 
+    onDelete() {
+        this.isPlayerFiring = false;
+        this.gameState.bullets = this.gameState.bullets.filter(b => b.player !== this.player);
+        this.gameState.players.splice(this.gameState.players.indexOf(this.player), 1);
+    }
+
     _playerFireHandler() {
         if (this.canPlayerFire) {
             this.gameState.addBullet(new BulletState(this.player));

@@ -13,6 +13,10 @@ class MainLoop {
         this.callbacks.push(callback);
     }
 
+    removeCallback(callback) {
+        this.callbacks = this.callbacks.filter(c => c !== callback);
+    }
+
     _run() {
         setInterval(() => {
             this.callbacks.forEach(c => c());

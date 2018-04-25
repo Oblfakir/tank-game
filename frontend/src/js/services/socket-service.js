@@ -3,9 +3,17 @@ import { config } from '../config/config';
 import { constants } from '../config/constants';
 
 export class SocketService {
-    constructor(roomName) {
+    joinRoom(roomName) {
         this.socket = io(config.host);
+        this.roomName = roomName;
         this.socket.emit(constants.socketJoinRoomActionName, roomName);
+    }
+
+    leaveRoom(callback) {
+        if (this.roomName) {
+            this.socket.emit(constants.socketLeaveRoomActionName, this.roomName, callback);
+        }
+        this.roomName = undefined;
     }
 
     emit(event) {

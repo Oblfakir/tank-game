@@ -1,10 +1,12 @@
-
-const UserEventsObservable = require('./logic/user-events-observable');
-const Controller = require('./controllers/controller');
 const MainLoop = require('./logic/main-loop');
 const constants = require('./config/constants');
+const Connection = require('./models/connection');
 
 class Main {
+    constructor () {
+        this.connections = [];
+    }
+
     start(io, room) {
         const mainLoop = new MainLoop(room.gameState, io, room.name);
         mainLoop.addCallback(room.gameState.handleBulletsMovement.bind(room.gameState));
@@ -17,9 +19,19 @@ class Main {
             socket.on(constants.socketJoinRoomActionName, roomName => {
                 if (room.name === roomName) {
                     socket.join(roomName, () => {
-                        const observable = new UserEventsObservable(socket);
-                        const controller = new Controller(observable, room.gameState);
-                        mainLoop.addCallback(controller.handleMainTick.bind(controller));
+                        const connection = new Connection(socket, room);
+                        this.connections.push(connection);
+                        mainLoop.addCallback(connection.tickHandler);
+                    });
+                }
+            });
+            socket.on(constants.socketLeaveRoomActionName, roomName => {
+                if (room.name === roomName) {
+                    socket.leave(roomName, () => {
+                        const connection = this.connections.find(c => c.id === socket.id);
+                        connection.abort();
+                        mainLoop.removeCallback(connection.tickHandler);
+                        this.connections.splice(this.connections.indexOf(connection), 1);
                     });
                 }
             });

@@ -2,6 +2,7 @@ const constants = {
     socketUserActionName: 'user move action',
     socketStateReceiveActionName: 'state receive action',
     socketJoinRoomActionName: 'join room',
+    socketLeaveRoomActionName: 'leave room',
     directions: {
         up: { x: 0, y: -1, name: 'upDirection'},
         down: { x: 0, y: 1, name: 'downDirection' },

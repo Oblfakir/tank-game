@@ -10,6 +10,7 @@ const roomsRouter = require('./rooms-router');
 const PATHS = {
     static: __dirname + '/static'
 };
+
 const port = 1234;
 
 app.use(cors());
@@ -19,9 +20,11 @@ app.use((req, res, next)=>{
     next();
 });
 
+app.use('/', express.static(PATHS.static));
+
+
 app.use('/rooms', roomsRouter);
 
-app.use('/', express.static(PATHS.static));
 
 app.get('/config', (req, res) => {
     res.send(JSON.stringify(config));
