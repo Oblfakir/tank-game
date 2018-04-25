@@ -30,4 +30,26 @@ export class Helpers {
                 return  Math.PI / 2;
         }
     }
+
+    static createRoomElementsByJSON(roomsJson, roomJoinHandler) {
+        const rooms = [];
+        roomsJson.forEach(room => {
+            const roomElement = document.createElement('div');
+            roomElement.classList.add('room');
+            const roomName = document.createElement('span');
+            roomName.classList.add('room__name');
+            roomName.textContent = room.name;
+            const roomJoinButton = document.createElement('button');
+            roomJoinButton.classList.add('room__join-button');
+            roomJoinButton.textContent = 'Join';
+            roomJoinButton.dataset.roomName = room.name;
+            roomJoinButton.addEventListener('click', async () => {
+                await roomJoinHandler(roomJoinButton.dataset.roomName);
+            });
+            roomElement.appendChild(roomName);
+            roomElement.appendChild(roomJoinButton);
+            rooms.push(roomElement);
+        });
+        return rooms;
+    }
 }

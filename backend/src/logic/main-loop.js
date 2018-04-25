@@ -1,7 +1,8 @@
 const constants = require('../config/constants');
 
 class MainLoop {
-    constructor(gameState, io) {
+    constructor(gameState, io, roomName) {
+        this.roomName = roomName;
         this.io = io;
         this.gameState = gameState;
         this.callbacks = [];
@@ -15,7 +16,8 @@ class MainLoop {
     _run() {
         setInterval(() => {
             this.callbacks.forEach(c => c());
-            this.io.emit(constants.socketStateReceiveActionName, JSON.stringify(this.gameState));
+            this.io.to(this.roomName)
+                .emit(constants.socketStateReceiveActionName, JSON.stringify(this.gameState));
         }, 1000 / 60);
     }
 }

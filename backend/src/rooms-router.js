@@ -10,13 +10,10 @@ router.route('/')
         res.send(JSON.stringify(rooms.getRooms()));
     })
     .post((req, res) => {
-        rooms.addRoom(new Main().start(req.io));
+        const main = new Main();
+        const roomName = rooms.addRoom();
+        main.start(req.io, roomName);
         res.send('ok');
-    });
-
-router.route(':name/join')
-    .post((req, res) => {
-
     });
 
 module.exports = router;

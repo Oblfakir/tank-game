@@ -2,12 +2,9 @@ const PlayerState = require('../models/player-state');
 const BulletState = require('../models/bullet-state');
 const config = require('../config/config');
 const Helpers = require('../utils/helpers');
-const constants = require("../config/constants");
 
 class Controller {
-    constructor(observable, gameState, socket, io) {
-        this.socket = socket;
-        this.io = io;
+    constructor(observable, gameState) {
         this.observable = observable;
         this.gameState = gameState;
 

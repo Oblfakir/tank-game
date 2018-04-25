@@ -3,8 +3,9 @@ import { config } from '../config/config';
 import { constants } from '../config/constants';
 
 export class SocketService {
-    constructor() {
+    constructor(roomName) {
         this.socket = io(config.host);
+        this.socket.emit(constants.socketJoinRoomActionName, roomName);
     }
 
     emit(event) {

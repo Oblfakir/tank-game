@@ -1,12 +1,11 @@
 class Rooms {
     constructor () {
         this.rooms = [];
-        this.rooms.push(new Room(1));
-        this.lastRoomNumber = 2;
+        this.lastRoomNumber = 1;
     }
 
-    addRoom(main) {
-        const room = new Room(this.lastRoomNumber++, main);
+    addRoom() {
+        const room = new Room(this.lastRoomNumber++);
         this.rooms.push(room);
         return room.name;
     }
@@ -17,9 +16,8 @@ class Rooms {
 }
 
 class Room {
-    constructor(number, main) {
+    constructor(number) {
         this.name = `room${number}`;
-        this.main = main;
     }
 }
 
