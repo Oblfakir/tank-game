@@ -35,6 +35,9 @@ class Controller {
     onDelete() {
         this.isPlayerFiring = false;
         this.gameState.bullets = this.gameState.bullets.filter(b => b.player !== this.player);
+        if (this.gameState.players.indexOf(this.player) !== -1) {
+            this.gameState.players.splice(this.gameState.players.indexOf(this.player), 1);
+        }
     }
 
     _playerFireHandler() {
