@@ -1,6 +1,6 @@
-const MainLoop = require('./logic/main-loop');
-const constants = require('./config/constants');
-const Connection = require('./models/connection');
+const MainLoop = require('./main-loop');
+const constants = require('../config/constants');
+const Connection = require('../models/connection');
 
 class StateHandler {
     constructor () {
@@ -16,6 +16,7 @@ class StateHandler {
         mainLoop.addCallback(room.gameState.removeBrokenWalls.bind(room.gameState));
 
         io.on('connection', (socket) => {
+            socket.emit(constants.socketGetConnectionIdActionName, socket.id);
             socket.on(constants.socketJoinRoomActionName, roomName => {
                 if (room.name === roomName) {
                     socket.join(roomName, () => {

@@ -5,12 +5,17 @@ export class Controller {
         this.observable = observable;
         this.renderer = new Renderer(context);
         this.socketService = socketService;
+        this.isPlayerDead = false;
         this.listenSocketEvents();
     }
 
     listenSocketEvents() {
-        this.socketService.subscribeToSocketEvents(gameState => {
-            this.renderer.render(gameState);
+        this.socketService.subscribeToSocketEvents(eventJson => {
+            const event = JSON.parse(eventJson);
+            if (event.playersToDelete.map(p => p.id).indexOf(this.socketService.playerId) !== -1) {
+                this.isPlayerDead = true;
+            }
+            this.renderer.render(event, this.isPlayerDead);
         });
     }
 }

@@ -26,10 +26,13 @@ class GameState {
 
     removeOutOfScreenBullets() {
         this.bullets = this.bullets.filter(b => this.bulletsToDelete.indexOf(b) === -1);
-        this.bulletsToDelete = [];
     }
 
     checkBulletsHitting() {
+        this.barriersToDelete = [];
+        this.bulletsToDelete = [];
+        this.playersToDelete = [];
+
         this.bullets.forEach(b => {
             this.players.filter(x => x !== b.player).forEach(p => {
                 if (Helpers.checkBulletIsHittingPlayer(b.coordinates, p.coordinates)) {
@@ -53,12 +56,10 @@ class GameState {
                 this.barriers.splice(this.barriers.indexOf(b), 1);
             }
         });
-        this.barriersToDelete = [];
     }
 
     removeDeadPlayers() {
         this.players = this.players.filter(p => this.playersToDelete.indexOf(p) === -1);
-        this.playersToDelete = [];
     }
 
     addBullet(bullet) {

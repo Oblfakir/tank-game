@@ -7,6 +7,7 @@ export class SocketService {
         this.socket = io(config.host);
         this.roomName = roomName;
         this.socket.emit(constants.socketJoinRoomActionName, roomName);
+        this.socket.on(constants.socketGetConnectionIdActionName, id => this.playerId = id);
     }
 
     leaveRoom(callback) {
@@ -21,9 +22,8 @@ export class SocketService {
     }
 
     subscribeToSocketEvents(callback) {
-        this.socket.on(constants.socketStateReceiveActionName, function(gameStateJSON){
-            const gameState = JSON.parse(gameStateJSON);
-            callback(gameState);
+        this.socket.on(constants.socketStateReceiveActionName, eventJSON => {
+            callback(eventJSON);
         });
     }
 }

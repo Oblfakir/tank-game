@@ -4,7 +4,8 @@ const config = require('../config/config');
 const Helpers = require('../utils/helpers');
 
 class Controller {
-    constructor(observable, gameState) {
+    constructor(observable, gameState, socketId) {
+        this.socketId = socketId;
         this.observable = observable;
         this.gameState = gameState;
         this._initialize();
@@ -16,7 +17,7 @@ class Controller {
         this.isPlayerFiring = false;
         this.canPlayerFire = true;
 
-        this.player = new PlayerState(this.gameState.getRandomGrassTerrain().coordinates);
+        this.player = new PlayerState(this.gameState.getRandomGrassTerrain().coordinates, this.socketId);
         this.gameState.addPlayer(this.player);
         this._listenEvents();
     }
@@ -34,7 +35,6 @@ class Controller {
     onDelete() {
         this.isPlayerFiring = false;
         this.gameState.bullets = this.gameState.bullets.filter(b => b.player !== this.player);
-        this.gameState.players.splice(this.gameState.players.indexOf(this.player), 1);
     }
 
     _playerFireHandler() {

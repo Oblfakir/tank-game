@@ -3,7 +3,8 @@ const config = require('../config/config');
 const Helpers = require('../utils/helpers');
 
 class PlayerState {
-    constructor(coordinates) {
+    constructor(coordinates, id) {
+        this.id = id;
         const size = (config.CANVAS_SIZE / config.BLOCKS_COUNT) / 2;
         this.coordinates = { x: coordinates.x + size, y: coordinates.y + size };
         this.direction = constants.directions.up;

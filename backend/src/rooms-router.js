@@ -3,7 +3,7 @@ const router = express.Router();
 const Rooms = require('./models/rooms');
 const GameState = require('./models/game-state');
 const rooms = new Rooms();
-const StateHandler = require('./state-handler');
+const StateHandler = require('./logic/state-handler');
 
 router.route('/')
     .get((req, res) => {

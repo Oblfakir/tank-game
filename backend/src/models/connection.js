@@ -5,7 +5,7 @@ class Connection {
     constructor (socket, room) {
         this.id = socket.id;
         this.observable = new UserEventsObservable(socket);
-        this.controller = new Controller(this.observable, room.gameState);
+        this.controller = new Controller(this.observable, room.gameState, this.id);
         this.tickHandler = this.controller.handleMainTick.bind(this.controller);
     }
 

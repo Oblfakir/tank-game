@@ -42,11 +42,12 @@ export class Initializer {
         this.setCanvasSize();
         this.toggleVisibility();
         this.connection = new Connection(roomName);
-        this.leaveRoomElement.addEventListener('click', this.abortConnection);
+        this.leaveRoomElement.addEventListener('click', await this.abortConnection);
     }
 
-    abortConnection() {
+    async abortConnection() {
         this.connection.abort();
+        await this.loadRooms();
         this.toggleVisibility();
     }
 
