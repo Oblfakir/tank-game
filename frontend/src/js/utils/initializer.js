@@ -7,10 +7,12 @@ import { Connection } from '../logic/connection';
 export class Initializer {
     constructor() {
         this.roomsElement = document.getElementById('rooms');
-        this.canvasContainerElement = document.getElementById('canvas-container');
+        this.canvasWrapperElement = document.getElementById('canvas-wrapper');
         this.leaveRoomElement = document.getElementById('leave-room');
         this.roomsContainerElement = document.getElementById('rooms-container');
-        this.canvas = document.getElementById('canvas');
+        this.canvasContainerElement = document.getElementById('canvas-container');
+        this.canvasTerrain = document.getElementById('canvas-terrain');
+        this.canvasPlayers = document.getElementById('canvas-players');
         this.abortConnection = this.abortConnection.bind(this);
         this.createRoomHandler = this.createRoomHandler.bind(this);
         this.onRoomJoin = this.onRoomJoin.bind(this);
@@ -27,13 +29,17 @@ export class Initializer {
     }
 
     setCanvasSize() {
-        this.canvas.width = config.CANVAS_SIZE;
-        this.canvas.height = config.CANVAS_SIZE;
+        this.canvasContainerElement.style.width = config.CANVAS_SIZE + "px";
+        this.canvasContainerElement.style.height = config.CANVAS_SIZE + "px";
+        this.canvasTerrain.width = config.CANVAS_SIZE;
+        this.canvasTerrain.height = config.CANVAS_SIZE;
+        this.canvasPlayers.width = config.CANVAS_SIZE;
+        this.canvasPlayers.height = config.CANVAS_SIZE;
     }
 
     toggleVisibility() {
         this.roomsElement.classList.toggle('no-display');
-        this.canvasContainerElement.classList.toggle('no-display');
+        this.canvasWrapperElement.classList.toggle('no-display');
         this.leaveRoomElement.classList.toggle('no-display');
     }
 

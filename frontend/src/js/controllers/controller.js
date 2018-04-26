@@ -2,9 +2,9 @@ import { Renderer } from "../view/renderer";
 import { constants } from "../config/constants";
 
 export class Controller {
-    constructor(observable, context, socketService) {
+    constructor(observable, socketService) {
         this.observable = observable;
-        this.renderer = new Renderer(context);
+        this.renderer = new Renderer();
         this.socketService = socketService;
         this.isPlayerDead = false;
         this._checkForRestartGameEvent = this._checkForRestartGameEvent.bind(this);

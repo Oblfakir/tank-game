@@ -8,13 +8,17 @@
     <title>Game</title>
 </head>
 <body>
+
     <div class="wrapper">
         <div id="rooms">
             <button id="create-room">Create room</button>
             <div id="rooms-container"></div>
         </div>
-        <div id="canvas-container" class="no-display">
-            <canvas id="canvas"></canvas>
+        <div id="canvas-wrapper" class="no-display">
+            <div id="canvas-container">
+                <canvas id="canvas-terrain"></canvas>
+                <canvas id="canvas-players"></canvas>
+            </div>
         </div>
         <button id="leave-room" class="no-display">Leave room</button>
     </div>

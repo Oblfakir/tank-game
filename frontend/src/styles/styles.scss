@@ -67,10 +67,26 @@
   margin: 5px;
 }
 
-#canvas-container {
+#canvas-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  #canvas-container {
+    position: relative;
+
+    #canvas-terrain {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #canvas-players {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
 }
 
 #canvas {

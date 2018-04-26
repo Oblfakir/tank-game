@@ -11,9 +11,8 @@ export class Connection {
     connect() {
         this.socketService = new SocketService();
         this.socketService.joinRoom(this.roomName);
-        this.context = document.getElementById('canvas').getContext('2d');
         this.observable = new UserEventsObservable(this.socketService, this.roomName);
-        this.controller = new Controller(this.observable, this.context, this.socketService);
+        this.controller = new Controller(this.observable, this.socketService);
     }
 
     abort() {
@@ -21,7 +20,6 @@ export class Connection {
             delete this.controller;
             delete this.observable;
             delete this.socketService;
-            delete this.context;
         });
     }
 }
