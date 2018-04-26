@@ -2,12 +2,12 @@ const MainLoop = require('./logic/main-loop');
 const constants = require('./config/constants');
 const Connection = require('./models/connection');
 
-class Main {
+class StateHandler {
     constructor () {
         this.connections = [];
     }
 
-    start(io, room) {
+    initialize(io, room) {
         const mainLoop = new MainLoop(room.gameState, io, room.name);
         mainLoop.addCallback(room.gameState.handleBulletsMovement.bind(room.gameState));
         mainLoop.addCallback(room.gameState.removeOutOfScreenBullets.bind(room.gameState));
@@ -39,4 +39,4 @@ class Main {
     }
 }
 
-module.exports = Main;
+module.exports = StateHandler;
