@@ -24,10 +24,6 @@ class GameState {
         });
     }
 
-    removeOutOfScreenBullets() {
-        this.bullets = this.bullets.filter(b => this.bulletsToDelete.indexOf(b) === -1);
-    }
-
     checkBulletsHitting() {
         this.barriersToDelete = [];
         this.bulletsToDelete = [];
@@ -49,6 +45,14 @@ class GameState {
         });
     }
 
+    removeOutOfScreenBullets() {
+        this.bullets = this.bullets.filter(b => this.bulletsToDelete.indexOf(b) === -1);
+    }
+
+    removePlayerBullets(player) {
+        this.bullets = this.bullets.filter(b => b.player !== player);
+    }
+
     removeBrokenWalls() {
         this.barriersToDelete.forEach(b => {
             if (b.type === constants.terrainTypes.wall) {
@@ -60,6 +64,13 @@ class GameState {
 
     removeDeadPlayers() {
         this.players = this.players.filter(p => this.playersToDelete.indexOf(p) === -1);
+    }
+
+    removePlayerIfExists(player) {
+        const playerIndex = this.players.indexOf(player);
+        if (playerIndex !== -1) {
+            this.players.splice(playerIndex, 1);
+        }
     }
 
     addBullet(bullet) {

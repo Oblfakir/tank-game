@@ -11,7 +11,6 @@ export class SocketService {
     }
 
     reconnectAfterDeath() {
-        console.log(constants.socketReconnectAction);
         this.socket.emit(constants.socketReconnectAction, 'reconnect');
     }
 

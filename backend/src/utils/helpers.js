@@ -42,15 +42,14 @@ class Helpers {
         if (terrainInDirection.type === constants.terrainTypes.grass) return true;
         const size = config.player.size / 2;
         const { x, y } = player.coordinates;
-        let { xMin, yMin, xMax, yMax } = terrainInDirection;
+        const { xMin, yMin, xMax, yMax } = terrainInDirection;
+        const { up, down, left, right } = constants.directions;
 
-        if (player.direction === constants.directions.up ||
-            player.direction === constants.directions.down) {
+        if (player.direction === up || player.direction === down) {
             return Math.min(Math.abs(yMin - y), Math.abs(yMax - y)) > size + config.player.speed;
         }
 
-        if (player.direction === constants.directions.left ||
-            player.direction === constants.directions.right) {
+        if (player.direction === left || player.direction === right) {
             return Math.min(Math.abs(xMin - x), Math.abs(xMax - x)) > size;
         }
     }
@@ -61,27 +60,28 @@ class Helpers {
             x: x + direction.x * config.player.speed,
             y: y + direction.y * config.player.speed
         };
+        const { up, down, left, right } = constants.directions;
 
         switch (direction) {
-            case constants.directions.up:
+            case up:
                 return {
-                    d1: { x: nextPosition.x + size, y: nextPosition.y - size},
-                    d2: { x: nextPosition.x - size, y: nextPosition.y - size}
+                    rightPoint: { x: nextPosition.x + size, y: nextPosition.y - size},
+                    leftPoint: { x: nextPosition.x - size, y: nextPosition.y - size}
                 };
-            case constants.directions.down:
+            case down:
                 return {
-                    d1: { x: nextPosition.x + size, y: nextPosition.y + size},
-                    d2: { x: nextPosition.x - size, y: nextPosition.y + size}
+                    rightPoint: { x: nextPosition.x + size, y: nextPosition.y + size},
+                    leftPoint: { x: nextPosition.x - size, y: nextPosition.y + size}
                 };
-            case constants.directions.left:
+            case left:
                 return {
-                    d1: { x: nextPosition.x + size, y: nextPosition.y + size},
-                    d2: { x: nextPosition.x + size, y: nextPosition.y - size}
+                    rightPoint: { x: nextPosition.x + size, y: nextPosition.y + size},
+                    leftPoint: { x: nextPosition.x + size, y: nextPosition.y - size}
                 };
-            case constants.directions.right:
+            case right:
                 return {
-                    d1: { x: nextPosition.x - size, y: nextPosition.y + size},
-                    d2: { x: nextPosition.x - size, y: nextPosition.y - size}
+                    rightPoint: { x: nextPosition.x - size, y: nextPosition.y + size},
+                    leftPoint: { x: nextPosition.x - size, y: nextPosition.y - size}
                 };
         }
     }

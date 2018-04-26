@@ -8,41 +8,61 @@ class StateHandler {
     }
 
     initialize(io, room) {
-        const mainLoop = new MainLoop(room.gameState, io, room.name);
-        mainLoop.addCallback(room.gameState.handleBulletsMovement.bind(room.gameState));
-        mainLoop.addCallback(room.gameState.removeOutOfScreenBullets.bind(room.gameState));
-        mainLoop.addCallback(room.gameState.checkBulletsHitting.bind(room.gameState));
-        mainLoop.addCallback(room.gameState.removeDeadPlayers.bind(room.gameState));
-        mainLoop.addCallback(room.gameState.removeBrokenWalls.bind(room.gameState));
+        this.mainLoop = new MainLoop(room.gameState, io, room.name);
+        this.gameState = room.gameState;
+        this._addMainCallbacks(room.gameState);
+        this._addSocketEventHandlers(io, room);
+    }
 
+    _addSocketEventHandlers(io, room) {
         io.on('connection', (socket) => {
             socket.emit(constants.socketGetConnectionIdActionName, socket.id);
             socket.on(constants.socketJoinRoomActionName, roomName => {
-                if (room.name === roomName) {
-                    socket.join(roomName, () => {
-                        const connection = new Connection(socket, room);
-                        this.connections.push(connection);
-                        mainLoop.addCallback(connection.tickHandler);
-                    });
-                }
+                this._joinRoomHandler(socket, room, roomName);
             });
             socket.on(constants.socketReconnectAction, () => {
-                const connection = this.connections.find(c => c.id === socket.id);
-                mainLoop.removeCallback(connection.tickHandler);
-                connection.connect();
-                mainLoop.addCallback(connection.tickHandler);
+                this._reconnectHandler(socket);
             });
             socket.on(constants.socketLeaveRoomActionName, roomName => {
-                if (room.name === roomName) {
-                    socket.leave(roomName, () => {
-                        const connection = this.connections.find(c => c.id === socket.id);
-                        connection.abort();
-                        mainLoop.removeCallback(connection.tickHandler);
-                        this.connections.splice(this.connections.indexOf(connection), 1);
-                    });
-                }
+                this._leaveRoomHandler(socket, room, roomName);
             });
         });
+    }
+
+    _joinRoomHandler(socket, room, roomName) {
+        if (room.name === roomName) {
+            socket.join(roomName, () => {
+                const connection = new Connection(socket, room);
+                this.connections.push(connection);
+                this.mainLoop.addCallback(connection.tickHandler);
+            });
+        }
+    }
+
+    _reconnectHandler(socket) {
+        const connection = this.connections.find(c => c.id === socket.id);
+        this.mainLoop.removeCallback(connection.tickHandler);
+        connection.connect();
+        this.mainLoop.addCallback(connection.tickHandler);
+    }
+
+    _leaveRoomHandler(socket, room, roomName) {
+        if (room.name === roomName) {
+            socket.leave(roomName, () => {
+                const connection = this.connections.find(c => c.id === socket.id);
+                connection.abort();
+                this.mainLoop.removeCallback(connection.tickHandler);
+                this.connections.splice(this.connections.indexOf(connection), 1);
+            });
+        }
+    }
+
+    _addMainCallbacks() {
+        this.mainLoop.addCallback(this.gameState.handleBulletsMovement.bind(this.gameState));
+        this.mainLoop.addCallback(this.gameState.removeOutOfScreenBullets.bind(this.gameState));
+        this.mainLoop.addCallback(this.gameState.checkBulletsHitting.bind(this.gameState));
+        this.mainLoop.addCallback(this.gameState.removeDeadPlayers.bind(this.gameState));
+        this.mainLoop.addCallback(this.gameState.removeBrokenWalls.bind(this.gameState));
     }
 }
 

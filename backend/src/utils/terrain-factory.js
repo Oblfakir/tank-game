@@ -8,10 +8,9 @@ class TerrainFactory {
     }
 
     getTerrain({i, j}, terrainType) {
-        return new TerrainState({
-                y: i * this.terrainWidth,
-                x: j * this.terrainWidth },
-            terrainType || TerrainFactory.getRandomType(), this.terrainWidth)
+        const width = this.terrainWidth;
+        const type = terrainType || TerrainFactory.getRandomType();
+        return new TerrainState({ y: i * width, x: j * width }, type, width)
     }
 
     static getRandomType() {

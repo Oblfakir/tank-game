@@ -24,20 +24,18 @@ class Controller {
 
     handleMainTick() {
         if (this.isPlayerMoving) {
-            const {d1, d2} = Helpers.getPlayerFrontPoints(this.player.coordinates, this.currentDirection);
-            this.player.move(this.currentDirection,
-                this.gameState.getTerrainInDirection(d1, this.currentDirection),
-                this.gameState.getTerrainInDirection(d2, this.currentDirection));
+            const {rightPoint, leftPoint} = Helpers.getPlayerFrontPoints(this.player.coordinates, this.currentDirection);
+            const terrain1 = this.gameState.getTerrainInDirection(rightPoint, this.currentDirection);
+            const terrain2 = this.gameState.getTerrainInDirection(leftPoint, this.currentDirection);
+            this.player.move(this.currentDirection, terrain1, terrain2);
         }
         if (this.isPlayerFiring) this._playerFireHandler();
     }
 
     onDelete() {
         this.isPlayerFiring = false;
-        this.gameState.bullets = this.gameState.bullets.filter(b => b.player !== this.player);
-        if (this.gameState.players.indexOf(this.player) !== -1) {
-            this.gameState.players.splice(this.gameState.players.indexOf(this.player), 1);
-        }
+        this.gameState.removePlayerBullets(this.player);
+        this.gameState.removePlayerIfExists(this.player);
     }
 
     _playerFireHandler() {
@@ -54,13 +52,8 @@ class Controller {
         this.observable.subscribe((event) => {
             const direction = Helpers.getDirectionFromEvent(event);
             this.currentDirection = direction || this.currentDirection;
-            if (!direction) {
-                this.isPlayerFiring = event.status;
-                this.isPlayerMoving = false;
-            } else {
-                this.isPlayerFiring = false;
-                this.isPlayerMoving = event.status;
-            }
+            this.isPlayerFiring = !direction ? event.status : false;
+            this.isPlayerMoving = direction ? event.status : false;
         });
     }
 }

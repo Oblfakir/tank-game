@@ -15,9 +15,9 @@ router.route('/')
     });
 
 function createRoom(io) {
-    const stateHandler = new StateHandler();
     const gameState = new GameState();
     const room = rooms.addRoom(gameState);
+    const stateHandler = new StateHandler();
     stateHandler.initialize(io, room);
 }
 
