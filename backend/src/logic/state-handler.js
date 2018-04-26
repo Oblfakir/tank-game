@@ -41,9 +41,11 @@ class StateHandler {
 
     _reconnectHandler(socket) {
         const connection = this.connections.find(c => c.id === socket.id);
-        this.mainLoop.removeCallback(connection.tickHandler);
-        connection.connect();
-        this.mainLoop.addCallback(connection.tickHandler);
+        if (connection) {
+            this.mainLoop.removeCallback(connection.tickHandler);
+            connection.connect();
+            this.mainLoop.addCallback(connection.tickHandler);
+        }
     }
 
     _leaveRoomHandler(socket, room, roomName) {
