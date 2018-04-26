@@ -7,13 +7,16 @@ class Controller {
     constructor(observable, gameState) {
         this.observable = observable;
         this.gameState = gameState;
+        this._initialize();
+    }
 
+    _initialize() {
         this.currentDirection = undefined;
         this.isPlayerMoving = false;
         this.isPlayerFiring = false;
         this.canPlayerFire = true;
 
-        this.player = new PlayerState();
+        this.player = new PlayerState(this.gameState.getRandomGrassTerrain().coordinates);
         this.gameState.addPlayer(this.player);
         this._listenEvents();
     }

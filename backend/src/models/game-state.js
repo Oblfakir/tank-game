@@ -75,6 +75,19 @@ class GameState {
         return this._getRelativeTerrain(indexes, direction);
     }
 
+    getRandomGrassTerrain() {
+        const grassTerrains = [];
+        for (let i = 0; i < config.BLOCKS_COUNT; i++) {
+            for (let j = 0; j < config.BLOCKS_COUNT; j++) {
+                if (this.terrain[i][j].type === constants.terrainTypes.grass) {
+                    grassTerrains.push(this.terrain[i][j]);
+                }
+            }
+        }
+        const n = Math.floor(Math.random() * grassTerrains.length);
+        return grassTerrains[n];
+    }
+
     _getRelativeTerrain({i, j}, direction) {
         switch (direction) {
             case constants.directions.up:
@@ -110,18 +123,13 @@ class GameState {
         for (let i = 0; i < config.BLOCKS_COUNT; i++) {
             const arr = [];
             for (let j = 0; j < config.BLOCKS_COUNT; j++) {
-                arr.push(terrainFactory.getTerrain({ i, j }));
-            }
-            this.terrain.push(arr);
-        }
-        this.terrain[0][0] = terrainFactory.getTerrain({ i: 0, j: 0 }, constants.terrainTypes.grass);
-
-        for (let i = 0; i < config.BLOCKS_COUNT; i++) {
-            for (let j = 0; j < config.BLOCKS_COUNT; j++) {
-                if (this.terrain[i][j].type !== constants.terrainTypes.grass) {
-                    this.barriers.push(this.terrain[i][j]);
+                const terrain = terrainFactory.getTerrain({ i, j });
+                arr.push(terrain);
+                if (terrain.type !== constants.terrainTypes.grass) {
+                    this.barriers.push(terrain);
                 }
             }
+            this.terrain.push(arr);
         }
     }
 }
