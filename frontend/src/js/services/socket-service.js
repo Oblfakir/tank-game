@@ -7,6 +7,15 @@ export class SocketService {
         this.socket = io(config.host);
         this.roomName = roomName;
         this.socket.emit(constants.socketJoinRoomActionName, roomName);
+        this.getPlayerId();
+    }
+
+    reconnectAfterDeath() {
+        console.log(constants.socketReconnectAction);
+        this.socket.emit(constants.socketReconnectAction, 'reconnect');
+    }
+
+    getPlayerId() {
         this.socket.on(constants.socketGetConnectionIdActionName, id => this.playerId = id);
     }
 

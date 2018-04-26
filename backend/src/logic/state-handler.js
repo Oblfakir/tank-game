@@ -26,6 +26,12 @@ class StateHandler {
                     });
                 }
             });
+            socket.on(constants.socketReconnectAction, () => {
+                const connection = this.connections.find(c => c.id === socket.id);
+                mainLoop.removeCallback(connection.tickHandler);
+                connection.connect();
+                mainLoop.addCallback(connection.tickHandler);
+            });
             socket.on(constants.socketLeaveRoomActionName, roomName => {
                 if (room.name === roomName) {
                     socket.leave(roomName, () => {

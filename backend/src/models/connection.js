@@ -4,12 +4,19 @@ const Controller = require('../controllers/controller');
 class Connection {
     constructor (socket, room) {
         this.id = socket.id;
-        this.observable = new UserEventsObservable(socket);
-        this.controller = new Controller(this.observable, room.gameState, this.id);
+        this.socket = socket;
+        this.room = room;
+        this.connect();
+    }
+
+    connect() {
+        if (this.controller) this.abort();
+        this.observable = new UserEventsObservable(this.socket);
+        this.controller = new Controller(this.observable, this.room.gameState, this.id);
         this.tickHandler = this.controller.handleMainTick.bind(this.controller);
     }
 
-    abort () {
+    abort() {
         this.controller.onDelete();
     }
 }

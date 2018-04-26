@@ -4,6 +4,7 @@ const constants = {
     socketJoinRoomActionName: 'join room',
     socketLeaveRoomActionName: 'leave room',
     socketGetConnectionIdActionName: 'connection id',
+    socketReconnectAction: 'reconnect after death',
     directions: {
         up: { x: 0, y: -1, name: 'upDirection'},
         down: { x: 0, y: 1, name: 'downDirection' },
