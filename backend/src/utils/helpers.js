@@ -1,5 +1,6 @@
 const config = require('../config/config');
 const constants = require('../config/constants');
+const TerrainFactory = require('./terrain-factory');
 
 class Helpers {
     static getDirectionFromEvent(event) {
@@ -65,25 +66,67 @@ class Helpers {
         switch (direction) {
             case up:
                 return {
-                    rightPoint: { x: nextPosition.x + size, y: nextPosition.y - size},
-                    leftPoint: { x: nextPosition.x - size, y: nextPosition.y - size}
+                    rightPoint: { x: nextPosition.x + size, y: nextPosition.y - size },
+                    leftPoint: { x: nextPosition.x - size, y: nextPosition.y - size }
                 };
             case down:
                 return {
-                    rightPoint: { x: nextPosition.x + size, y: nextPosition.y + size},
-                    leftPoint: { x: nextPosition.x - size, y: nextPosition.y + size}
+                    rightPoint: { x: nextPosition.x + size, y: nextPosition.y + size },
+                    leftPoint: { x: nextPosition.x - size, y: nextPosition.y + size }
                 };
             case left:
                 return {
-                    rightPoint: { x: nextPosition.x + size, y: nextPosition.y + size},
-                    leftPoint: { x: nextPosition.x + size, y: nextPosition.y - size}
+                    rightPoint: { x: nextPosition.x + size, y: nextPosition.y + size },
+                    leftPoint: { x: nextPosition.x + size, y: nextPosition.y - size }
                 };
             case right:
                 return {
-                    rightPoint: { x: nextPosition.x - size, y: nextPosition.y + size},
-                    leftPoint: { x: nextPosition.x - size, y: nextPosition.y - size}
+                    rightPoint: { x: nextPosition.x - size, y: nextPosition.y + size },
+                    leftPoint: { x: nextPosition.x - size, y: nextPosition.y - size }
                 };
         }
+    }
+
+    static getRandomGrassTerrain(terrain) {
+        const grassTerrains = [];
+        for (let i = 0; i < config.BLOCKS_COUNT; i++) {
+            for (let j = 0; j < config.BLOCKS_COUNT; j++) {
+                if (terrain[i][j].type === constants.terrainTypes.grass) {
+                    grassTerrains.push(terrain[i][j]);
+                }
+            }
+        }
+        const n = Math.floor(Math.random() * grassTerrains.length);
+        return grassTerrains[n];
+    }
+
+    static findTerrainByCoordinates({ x, y }, terrain) {
+        for (let i = 0; i < config.BLOCKS_COUNT; i++) {
+            for (let j = 0; j < config.BLOCKS_COUNT; j++) {
+                let { xMin, yMin, xMax, yMax } = terrain[i][j];
+                if (x >= xMin && y >= yMin && x <= xMax && y <= yMax) {
+                    return { i, j };
+                }
+            }
+        }
+    }
+
+    static createTerrain() {
+        const terrain = [];
+        const barriers = [];
+        const terrainFactory = new TerrainFactory();
+        for (let i = 0; i < config.BLOCKS_COUNT; i++) {
+            const terrainRow = [];
+            for (let j = 0; j < config.BLOCKS_COUNT; j++) {
+                const terrainItem = terrainFactory.getTerrain({ i, j });
+                terrainRow.push(terrainItem);
+                if (terrainItem.type !== constants.terrainTypes.grass) {
+                    barriers.push(terrainItem);
+                }
+            }
+            terrain.push(terrainRow);
+        }
+        return { terrain, barriers }
     }
 }
 

@@ -9,12 +9,16 @@ export class Renderer {
         this.isInitiallyRendered = false;
     }
 
-    render(gameState, isPlayerDead) {
+    render(gameState, isPlayerDead, playerId) {
         if (isPlayerDead) {
             this._showDeathScreen();
         } else {
             this._renderTerrain(gameState);
             this._renderPlayers(gameState);
+            const score = gameState.scores.scores.find(s => s.id === playerId);
+            if (score) {
+                this._renderScore(score.score)
+            }
         }
     }
 
@@ -33,11 +37,19 @@ export class Renderer {
         this.viewState.renderPlayers();
     }
 
+    _renderScore(score) {
+        const context = this.contextPlayers;
+        context.fillStyle = "#000000";
+        context.font = "12px Arial";
+        context.fillText("Score: " + score, config.CANVAS_SIZE - 50, 12);
+    }
+
     _showDeathScreen() {
-        this.contextPlayers.fillStyle = "#000000";
-        this.contextPlayers.fillRect(0, config.CANVAS_SIZE / 2 - 70, config.CANVAS_SIZE, 100);
-        this.contextPlayers.fillStyle = "#FF0000";
-        this.contextPlayers.font = "60px Optimus Princeps";
-        this.contextPlayers.fillText("YOU DIED", config.CANVAS_SIZE / 2 - 150, config.CANVAS_SIZE / 2);
+        const context = this.contextPlayers;
+        context.fillStyle = "#000000";
+        context.fillRect(0, config.CANVAS_SIZE / 2 - 70, config.CANVAS_SIZE, 100);
+        context.fillStyle = "#FF0000";
+        context.font = "60px Optimus Princeps";
+        context.fillText("YOU DIED", config.CANVAS_SIZE / 2 - 150, config.CANVAS_SIZE / 2);
     }
 }

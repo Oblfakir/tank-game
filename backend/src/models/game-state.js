@@ -1,7 +1,6 @@
 const constants = require('../config/constants');
-const config = require('../config/config');
-const TerrainFactory = require('../utils/terrain-factory');
 const Helpers = require('../utils/helpers');
+const Scores = require('./scores');
 
 class GameState {
     constructor() {
@@ -12,15 +11,14 @@ class GameState {
         this.playersToDelete = [];
         this.barriersToDelete = [];
         this.barriers = [];
+        this.scores = new Scores();
         this._createTerrain();
     }
 
     handleBulletsMovement() {
         this.bullets.forEach(b => {
             const isInScreen = b.move();
-            if (!isInScreen) {
-                this.bulletsToDelete.push(b);
-            }
+            if (!isInScreen) this.bulletsToDelete.push(b);
         });
     }
 
@@ -34,6 +32,9 @@ class GameState {
                 if (Helpers.checkBulletIsHittingPlayer(b.coordinates, p.coordinates)) {
                     this.playersToDelete.push(p);
                     this.bulletsToDelete.push(b);
+                    if (b.player) {
+                        this.scores.increaseScoreFor(b.player.id)
+                    }
                 }
             });
             this.barriers.forEach(bar => {
@@ -68,9 +69,7 @@ class GameState {
 
     removePlayerIfExists(player) {
         const playerIndex = this.players.indexOf(player);
-        if (playerIndex !== -1) {
-            this.players.splice(playerIndex, 1);
-        }
+        if (playerIndex !== -1) this.players.splice(playerIndex, 1);
     }
 
     addBullet(bullet) {
@@ -79,6 +78,7 @@ class GameState {
 
     addPlayer(player) {
         this.players.push(player);
+        this.scores.addPlayer(player.id);
     }
 
     getTerrainInDirection(coordinates, direction) {
@@ -88,61 +88,33 @@ class GameState {
     }
 
     getRandomGrassTerrain() {
-        const grassTerrains = [];
-        for (let i = 0; i < config.BLOCKS_COUNT; i++) {
-            for (let j = 0; j < config.BLOCKS_COUNT; j++) {
-                if (this.terrain[i][j].type === constants.terrainTypes.grass) {
-                    grassTerrains.push(this.terrain[i][j]);
-                }
-            }
-        }
-        const n = Math.floor(Math.random() * grassTerrains.length);
-        return grassTerrains[n];
+        return Helpers.getRandomGrassTerrain(this.terrain);
     }
 
-    _getRelativeTerrain({i, j}, direction) {
+    _getRelativeTerrain({ i, j }, direction) {
+        const { up, down, left, right } = constants.directions;
         switch (direction) {
-            case constants.directions.up:
-                if (this.terrain[i - 1]) {
-                    return this.terrain[i - 1][j];
-                }
-                break;
-            case constants.directions.down:
-                if (this.terrain[i + 1]) {
-                    return this.terrain[i + 1][j];
-                }
-                break;
-            case constants.directions.left:
+            case up:
+                if (!this.terrain[i - 1]) return;
+                return this.terrain[i - 1][j];
+            case down:
+                if (!this.terrain[i + 1]) return;
+                return this.terrain[i + 1][j];
+            case left:
                 return this.terrain[i][j - 1];
-            case constants.directions.right:
+            case right:
                 return this.terrain[i][j + 1];
         }
     }
 
-    _findTerrainByCoordinates({x, y}) {
-        for (let i = 0; i < config.BLOCKS_COUNT; i++) {
-            for (let j = 0; j < config.BLOCKS_COUNT; j++) {
-                let { xMin, yMin, xMax, yMax } = this.terrain[i][j];
-                if (x >= xMin && y >= yMin && x <= xMax && y <= yMax) {
-                    return { i, j };
-                }
-            }
-        }
+    _findTerrainByCoordinates({ x, y }) {
+        return Helpers.findTerrainByCoordinates({ x, y }, this.terrain);
     }
 
     _createTerrain() {
-        const terrainFactory = new TerrainFactory();
-        for (let i = 0; i < config.BLOCKS_COUNT; i++) {
-            const arr = [];
-            for (let j = 0; j < config.BLOCKS_COUNT; j++) {
-                const terrain = terrainFactory.getTerrain({ i, j });
-                arr.push(terrain);
-                if (terrain.type !== constants.terrainTypes.grass) {
-                    this.barriers.push(terrain);
-                }
-            }
-            this.terrain.push(arr);
-        }
+        const { terrain, barriers } = Helpers.createTerrain();
+        this.terrain = terrain;
+        this.barriers = barriers;
     }
 }
 

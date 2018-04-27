@@ -15,7 +15,7 @@ export class Controller {
         this.socketService.subscribeToSocketEvents(eventJson => {
             const event = JSON.parse(eventJson);
             this._checkIfPlayerWasKilled(event);
-            this.renderer.render(event, this.isPlayerDead);
+            this.renderer.render(event, this.isPlayerDead, this.socketService.playerId);
         });
     }
 
