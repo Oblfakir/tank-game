@@ -9,9 +9,11 @@ class BulletState {
     }
 
     move() {
+        const speed = config.bullet.speed;
+        const { x, y } = this.coordinates;
         const nextPosition = {
-            x: this.coordinates.x + this.direction.x * config.bullet.speed,
-            y: this.coordinates.y + this.direction.y * config.bullet.speed
+            x: x + this.direction.x * speed,
+            y: y + this.direction.y * speed
         };
         const isInScreen = Helpers.checkBoundariesForBullet(nextPosition);
         if (isInScreen) {

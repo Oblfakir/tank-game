@@ -6,15 +6,20 @@ class PlayerState {
     constructor(coordinates, id) {
         this.id = id;
         const size = (config.CANVAS_SIZE / config.BLOCKS_COUNT) / 2;
-        this.coordinates = { x: coordinates.x + size, y: coordinates.y + size };
+        this.coordinates = {
+            x: coordinates.x + size,
+            y: coordinates.y + size
+        };
         this.direction = constants.directions.up;
     }
 
     move(direction, terrainInDirection1, terrainInDirection2) {
         this.direction = direction;
+        const { x, y } = this.coordinates;
+        const speed = config.player.speed;
         const nextPosition = {
-            x: this.coordinates.x + this.direction.x * config.player.speed,
-            y: this.coordinates.y + this.direction.y * config.player.speed
+            x: x + this.direction.x * speed,
+            y: y + this.direction.y * speed
         };
         if (Helpers.checkBoundaries(nextPosition) &&
             Helpers.checkTerrainInDirection(this, terrainInDirection1) &&
