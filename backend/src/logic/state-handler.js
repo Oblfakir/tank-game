@@ -8,6 +8,7 @@ class StateHandler {
     }
 
     initialize(io, room) {
+        this.room = room;
         this.mainLoop = new MainLoop(room.gameState, io, room.name);
         this.gameState = room.gameState;
         this._addMainCallbacks(room.gameState);

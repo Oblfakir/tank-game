@@ -3,6 +3,7 @@ import { config } from "../config/config";
 import { constants } from '../config/constants';
 import { Helpers } from "../utils/helpers";
 import { Connection } from '../logic/connection';
+import io from 'socket.io-client';
 
 export class Initializer {
     constructor() {
@@ -28,6 +29,22 @@ export class Initializer {
         Object.assign(constants, constantsJson);
     }
 
+    showCurrentPlayersOnline() {
+        io(config.host).on(constants.socketCurrentOnlinePlayers, res => {
+            const playersPerRoom = JSON.parse(res);
+            const roomNames = playersPerRoom.map(x => x.room);
+            [].slice.call(this.roomsContainerElement.children).forEach(room => {
+                if (roomNames.indexOf(room.dataset.roomName) !== -1) {
+                    const row = playersPerRoom.find(x => x.room === room.dataset.roomName);
+                    if (row) {
+                        const text = 'Players: ' + row.players;
+                        room.querySelector('.room__players').textContent = text;
+                    }
+                }
+            });
+        });
+    }
+
     setCanvasSize() {
         this.canvasContainerElement.style.width = config.CANVAS_SIZE + "px";
         this.canvasContainerElement.style.height = config.CANVAS_SIZE + "px";
@@ -44,7 +61,6 @@ export class Initializer {
     }
 
     async onRoomJoin(roomName) {
-        await this.getConfig();
         this.setCanvasSize();
         this.toggleVisibility();
         this.connection = new Connection(roomName);

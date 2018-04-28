@@ -5,6 +5,7 @@ const constants = {
     socketLeaveRoomActionName: 'leave room',
     socketGetConnectionIdActionName: 'connection id',
     socketReconnectAction: 'reconnect after death',
+    socketCurrentOnlinePlayers: 'current online players',
     directions: {
         up: { x: 0, y: -1, name: 'upDirection'},
         down: { x: 0, y: 1, name: 'downDirection' },

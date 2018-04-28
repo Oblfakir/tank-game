@@ -38,17 +38,21 @@ export class Helpers {
         roomsJson.forEach(room => {
             const roomElement = document.createElement('div');
             roomElement.classList.add('room');
+            roomElement.dataset.roomName = room.name;
             const roomName = document.createElement('span');
             roomName.classList.add('room__name');
             roomName.textContent = room.name;
             const roomJoinButton = document.createElement('button');
             roomJoinButton.classList.add('room__join-button');
             roomJoinButton.textContent = 'Join';
-            roomJoinButton.dataset.roomName = room.name;
             roomJoinButton.addEventListener('click', async () => {
-                await roomJoinHandler(roomJoinButton.dataset.roomName);
+                await roomJoinHandler(room.name);
             });
+            const roomPlayers = document.createElement('span');
+            roomPlayers.classList.add('room__players');
+            roomPlayers.textContent = 'Players: 0';
             roomElement.appendChild(roomName);
+            roomElement.appendChild(roomPlayers);
             roomElement.appendChild(roomJoinButton);
             rooms.push(roomElement);
         });
