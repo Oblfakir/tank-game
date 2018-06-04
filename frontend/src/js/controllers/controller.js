@@ -1,5 +1,5 @@
-import { Renderer } from "../view/renderer";
-import { constants } from "../config/constants";
+import { Renderer } from '../view/renderer';
+import { constants } from '../config/constants';
 
 export class Controller {
     constructor(observable, socketService) {
@@ -14,6 +14,7 @@ export class Controller {
     _listenSocketEvents() {
         this.socketService.subscribeToSocketEvents(eventJson => {
             const event = JSON.parse(eventJson);
+
             this._checkIfPlayerWasKilled(event);
             this.renderer.render(event, this.isPlayerDead, this.socketService.playerId);
         });

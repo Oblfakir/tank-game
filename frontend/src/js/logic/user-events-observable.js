@@ -13,6 +13,7 @@ export class UserEventsObservable {
 
     fireEvent(event, thisObj) {
         const scope = thisObj || window;
+
         if (this.canSendToServer) {
             this.socketService.emit(event);
         }
@@ -36,6 +37,7 @@ export class UserEventsObservable {
 
     _userKeyDown(event) {
         const userEvent = Helpers.getUserEventObject(event.keyCode, true, this.roomName);
+
         if (userEvent) {
             this.fireEvent(userEvent);
         }
@@ -43,6 +45,7 @@ export class UserEventsObservable {
 
     _userKeyUp(event) {
         const userEvent = Helpers.getUserEventObject(event.keyCode, false, this.roomName);
+
         if (userEvent) {
             this.fireEvent(userEvent);
         }

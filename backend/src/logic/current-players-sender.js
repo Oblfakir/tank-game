@@ -3,7 +3,7 @@ const constants = require('../config/constants');
 class CurrentPlayersSender {
     constructor() {
         this.handlers = [];
-        this.intervalIsSet = false
+        this.intervalIsSet = false;
     }
 
     addHandler(handler) {
@@ -18,7 +18,7 @@ class CurrentPlayersSender {
                         return {
                             room: h.room.name,
                             players: h.connections.length
-                        }
+                        };
                     });
                 io.emit(constants.socketCurrentOnlinePlayers, JSON.stringify(playersPerRoom));
             }, 500);

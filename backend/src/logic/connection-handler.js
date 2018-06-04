@@ -2,7 +2,7 @@ const MainLoop = require('./main-loop');
 const constants = require('../config/constants');
 const Connection = require('../models/connection');
 
-class StateHandler {
+class ConnectionHandler {
     constructor () {
         this.connections = [];
     }
@@ -69,4 +69,4 @@ class StateHandler {
     }
 }
 
-module.exports = StateHandler;
+module.exports = ConnectionHandler;

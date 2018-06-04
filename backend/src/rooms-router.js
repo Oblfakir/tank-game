@@ -4,7 +4,7 @@ const router = express.Router();
 const Rooms = require('./models/rooms');
 const GameState = require('./models/game-state');
 const rooms = new Rooms();
-const StateHandler = require('./logic/state-handler');
+const ConnectionHandler = require('./logic/connection-handler');
 const CurrentPlayersSender = require('./logic/current-players-sender');
 
 const currentPlayersSender = new CurrentPlayersSender();
@@ -22,9 +22,9 @@ router.route('/')
 function createRoom(io) {
     const gameState = new GameState();
     const room = rooms.addRoom(gameState);
-    const stateHandler = new StateHandler();
-    stateHandler.initialize(io, room);
-    currentPlayersSender.addHandler(stateHandler);
+    const connectionHandler = new ConnectionHandler();
+    connectionHandler.initialize(io, room);
+    currentPlayersSender.addHandler(connectionHandler);
 }
 
 module.exports = router;

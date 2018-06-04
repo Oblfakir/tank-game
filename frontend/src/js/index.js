@@ -7,5 +7,3 @@ window.onload = async () => {
     await initializer.getConfig();
     initializer.showCurrentPlayersOnline();
 };
-
-

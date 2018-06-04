@@ -22,9 +22,7 @@ app.use((req, res, next)=>{
 
 app.use('/', express.static(PATHS.static));
 
-
 app.use('/rooms', roomsRouter);
-
 
 app.get('/config', (req, res) => {
     res.send(JSON.stringify(config));

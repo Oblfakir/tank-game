@@ -12,7 +12,7 @@ class GameState {
         this.barriersToDelete = [];
         this.barriers = [];
         this.scores = new Scores();
-        this._createTerrain();
+        this._initializeTerrain();
     }
 
     handleBulletsMovement() {
@@ -33,7 +33,7 @@ class GameState {
                     this.playersToDelete.push(p);
                     this.bulletsToDelete.push(b);
                     if (b.player) {
-                        this.scores.increaseScoreFor(b.player.id)
+                        this.scores.increaseScoreFor(b.player.id);
                     }
                 }
             });
@@ -48,10 +48,6 @@ class GameState {
 
     removeOutOfScreenBullets() {
         this.bullets = this.bullets.filter(b => this.bulletsToDelete.indexOf(b) === -1);
-    }
-
-    removePlayerBullets(player) {
-        this.bullets = this.bullets.filter(b => b.player !== player);
     }
 
     removeBrokenWalls() {
@@ -111,7 +107,7 @@ class GameState {
         return Helpers.findTerrainByCoordinates({ x, y }, this.terrain);
     }
 
-    _createTerrain() {
+    _initializeTerrain() {
         const { terrain, barriers } = Helpers.createTerrain();
         this.terrain = terrain;
         this.barriers = barriers;
