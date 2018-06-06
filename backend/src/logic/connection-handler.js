@@ -1,6 +1,13 @@
 const MainLoop = require('./main-loop');
-const constants = require('../config/constants');
-const Connection = require('../models/connection');
+const {
+    SOCKET_GET_CONNECTION_ID_ACTION_NAME,
+    SOCKET_JOIN_ROOM_ACTION_NAME,
+    SOCKET_RECONNECT_ACTION,
+    SOCKET_LEAVE_ROOM_ACTION_NAME
+} = require('../config/constants');
+const PlayerState = require('../models/player-state');
+const UserEventsObservable = require('./user-events-observable');
+const Controller = require('../controllers/controller');
 
 class ConnectionHandler {
     constructor () {
@@ -9,22 +16,24 @@ class ConnectionHandler {
 
     initialize(io, room) {
         this.room = room;
+        this.observables = [];
+        this.players = [];
+        this.controller = new Controller(this.room.gameState);
         this.mainLoop = new MainLoop(room.gameState, io, room.name);
         this.gameState = room.gameState;
+
+        this.mainLoop.addCallback(this.controller.handleMainTick.bind(this.controller));
         this._addMainCallbacks(room.gameState);
         this._addSocketEventHandlers(io, room);
     }
 
     _addSocketEventHandlers(io, room) {
         io.on('connection', (socket) => {
-            socket.emit(constants.socketGetConnectionIdActionName, socket.id);
-            socket.on(constants.socketJoinRoomActionName, roomName => {
+            socket.emit(SOCKET_GET_CONNECTION_ID_ACTION_NAME, socket.id);
+            socket.on(SOCKET_JOIN_ROOM_ACTION_NAME, roomName => {
                 this._joinRoomHandler(socket, room, roomName);
             });
-            socket.on(constants.socketReconnectAction, () => {
-                this._reconnectHandler(socket);
-            });
-            socket.on(constants.socketLeaveRoomActionName, roomName => {
+            socket.on(SOCKET_LEAVE_ROOM_ACTION_NAME, roomName => {
                 this._leaveRoomHandler(socket, room, roomName);
             });
         });
@@ -33,29 +42,30 @@ class ConnectionHandler {
     _joinRoomHandler(socket, room, roomName) {
         if (room.name === roomName) {
             socket.join(roomName, () => {
-                const connection = new Connection(socket, room);
-                this.connections.push(connection);
-                this.mainLoop.addCallback(connection.tickHandler);
-            });
-        }
-    }
+                this.players = this.players.filter(c => c.id === socket.id);
+                this.observables = this.observables.filter(c => c.id !== socket.id);
 
-    _reconnectHandler(socket) {
-        const connection = this.connections.find(c => c.id === socket.id);
-        if (connection) {
-            this.mainLoop.removeCallback(connection.tickHandler);
-            connection.connect();
-            this.mainLoop.addCallback(connection.tickHandler);
+                const coordinates = this.gameState.getRandomGrassTerrainCoordinates();
+                const player = new PlayerState(coordinates, socket.id);
+                const observable = new UserEventsObservable(socket);
+
+                this.observables.push(observable);
+                this.players.push(player);
+                this.controller.addPlayer(player, observable);
+            });
         }
     }
 
     _leaveRoomHandler(socket, room, roomName) {
         if (room.name === roomName) {
             socket.leave(roomName, () => {
-                const connection = this.connections.find(c => c.id === socket.id);
-                connection.abort();
-                this.mainLoop.removeCallback(connection.tickHandler);
-                this.connections.splice(this.connections.indexOf(connection), 1);
+                this.observables = this.observables.filter(c => c.id !== socket.id);
+                const player = this.players.find(c => c.id === socket.id);
+
+                if (player) {
+                    this.controller.removePlayer(player);
+                }
+                this.players = this.players.filter(c => c.id === socket.id);
             });
         }
     }

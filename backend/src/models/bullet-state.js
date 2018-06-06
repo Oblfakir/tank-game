@@ -1,5 +1,4 @@
-const config = require('../config/config');
-const Helpers = require('../utils/helpers');
+const { BULLET_SPEED } = require('../config/config');
 
 class BulletState {
     constructor(player) {
@@ -9,17 +8,12 @@ class BulletState {
     }
 
     move() {
-        const speed = config.bullet.speed;
         const { x, y } = this.coordinates;
-        const nextPosition = {
-            x: x + this.direction.x * speed,
-            y: y + this.direction.y * speed
+
+        this.coordinates = {
+            x: x + this.direction.x * BULLET_SPEED,
+            y: y + this.direction.y * BULLET_SPEED
         };
-        const isInScreen = Helpers.checkBoundariesForBullet(nextPosition);
-        if (isInScreen) {
-            this.coordinates = nextPosition;
-        }
-        return isInScreen;
     }
 }
 

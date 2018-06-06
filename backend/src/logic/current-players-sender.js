@@ -1,4 +1,4 @@
-const constants = require('../config/constants');
+const { SOCKET_CURRENT_ONLINE_PLAYERS_ACTION } = require('../config/constants');
 
 class CurrentPlayersSender {
     constructor() {
@@ -14,13 +14,13 @@ class CurrentPlayersSender {
         if (!this.intervalIsSet) {
             setInterval(() => {
                 const playersPerRoom = this.handlers
-                    .map(h => {
+                    .map(handler => {
                         return {
-                            room: h.room.name,
-                            players: h.connections.length
+                            room: handler.room.name,
+                            players: handler.players.length
                         };
                     });
-                io.emit(constants.socketCurrentOnlinePlayers, JSON.stringify(playersPerRoom));
+                io.emit(SOCKET_CURRENT_ONLINE_PLAYERS_ACTION, JSON.stringify(playersPerRoom));
             }, 500);
             this.intervalIsSet = true;
         }

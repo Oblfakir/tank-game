@@ -11,20 +11,21 @@ export class TerrainView {
 
     render() {
         let { x, y } = this.state.coordinates;
-        const { grass, stone, wall } = constants.terrainTypes;
+        const { GRASS, STONE, WALL } = constants.TERRAIN_TYPES;
         const { grassImg, stoneImg, wallImg } = this.imageSource;
         const width = this.width;
+
         x += width / 2;
         y += width / 2;
         this.context.translate(x, y);
         switch (this.state.type) {
-            case grass:
+            case GRASS:
                 this.context.drawImage(grassImg, -width / 2, -width / 2, width, width);
                 break;
-            case stone:
+            case STONE:
                 this.context.drawImage(stoneImg, -width / 2, -width / 2, width, width);
                 break;
-            case wall:
+            case WALL:
                 this.context.drawImage(wallImg, -width / 2, -width / 2, width, width);
                 break;
         }

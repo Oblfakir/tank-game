@@ -15,15 +15,13 @@ export class Renderer {
         } else {
             this._renderTerrain(gameState);
             this._renderPlayers(gameState);
-            const score = gameState.scores.scores.find(s => s.id === playerId);
-            if (score) {
-                this._renderScore(score.score)
-            }
+
+            //_renderScore
         }
     }
 
     _renderTerrain(gameState) {
-        if (gameState.barriersToDelete.length > 0 || !this.isInitiallyRendered ) {
+        if (gameState.barriersToDelete.length > 0 || !this.isInitiallyRendered) {
             this.viewState.mapGameStateForTerrain(gameState);
             this.viewState.clearTerrainCanvas();
             this.viewState.renderTerrain();
@@ -39,17 +37,19 @@ export class Renderer {
 
     _renderScore(score) {
         const context = this.contextPlayers;
-        context.fillStyle = "#000000";
-        context.font = "12px Arial";
-        context.fillText("Score: " + score, config.CANVAS_SIZE - 50, 12);
+
+        context.fillStyle = '#000000';
+        context.font = '12px Arial';
+        context.fillText(`Score: ${  score}`, config.CANVAS_SIZE - 50, 12);
     }
 
     _showDeathScreen() {
         const context = this.contextPlayers;
-        context.fillStyle = "#000000";
+
+        context.fillStyle = '#000000';
         context.fillRect(0, config.CANVAS_SIZE / 2 - 70, config.CANVAS_SIZE, 100);
-        context.fillStyle = "#FF0000";
-        context.font = "60px Optimus Princeps";
-        context.fillText("YOU DIED", config.CANVAS_SIZE / 2 - 150, config.CANVAS_SIZE / 2);
+        context.fillStyle = '#FF0000';
+        context.font = '60px Optimus Princeps';
+        context.fillText('YOU DIED', config.CANVAS_SIZE / 2 - 150, config.CANVAS_SIZE / 2);
     }
 }

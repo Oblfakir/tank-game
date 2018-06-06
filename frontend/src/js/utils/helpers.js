@@ -4,51 +4,56 @@ import { UserEvent } from '../models/user-event';
 
 export class Helpers {
     static getUserEventObject(keyCode, status, roomName) {
-        const {up, down, left, right, fire } = constants.events.click;
+        const { UP, DOWN, LEFT, RIGHT, FIRE } = constants.CLICK_EVENTS;
+
         switch (keyCode) {
-            case config.KEYS.up:
-                return new UserEvent(up, status, roomName);
-            case config.KEYS.down:
-                return new UserEvent(down, status, roomName);
-            case config.KEYS.left:
-                return new UserEvent(left, status, roomName);
-            case config.KEYS.right:
-                return new UserEvent(right, status, roomName);
-            case config.KEYS.fire:
-                return new UserEvent(fire, status, roomName);
+            case config.KEY_UP:
+                return new UserEvent(UP, status, roomName);
+            case config.KEY_DOWN:
+                return new UserEvent(DOWN, status, roomName);
+            case config.KEY_LEFT:
+                return new UserEvent(LEFT, status, roomName);
+            case config.KEY_RIGHT:
+                return new UserEvent(RIGHT, status, roomName);
+            case config.KEY_FIRE:
+                return new UserEvent(FIRE, status, roomName);
+            default: return {};
         }
     }
 
     static getAngleByDirection(direction) {
-        const {up, down, left, right } = constants.directions;
+        const { UP, DOWN, LEFT, RIGHT } = constants.DIRECTIONS;
+
         switch (direction.name) {
-            case up.name:
+            case UP.name:
                 return 0;
-            case down.name:
+            case DOWN.name:
                 return Math.PI;
-            case left.name:
+            case LEFT.name:
                 return -Math.PI / 2;
-            case right.name:
+            case RIGHT.name:
                 return Math.PI / 2;
         }
     }
 
     static createRoomElementsByJSON(roomsJson, roomJoinHandler) {
         const rooms = [];
+
         roomsJson.forEach(room => {
             const roomElement = document.createElement('div');
+            const roomName = document.createElement('span');
+            const roomJoinButton = document.createElement('button');
+            const roomPlayers = document.createElement('span');
+
             roomElement.classList.add('room');
             roomElement.dataset.roomName = room.name;
-            const roomName = document.createElement('span');
             roomName.classList.add('room__name');
             roomName.textContent = room.name;
-            const roomJoinButton = document.createElement('button');
             roomJoinButton.classList.add('room__join-button');
             roomJoinButton.textContent = 'Join';
             roomJoinButton.addEventListener('click', async () => {
                 await roomJoinHandler(room.name);
             });
-            const roomPlayers = document.createElement('span');
             roomPlayers.classList.add('room__players');
             roomPlayers.textContent = 'Players: 0';
             roomElement.appendChild(roomName);
@@ -56,6 +61,7 @@ export class Helpers {
             roomElement.appendChild(roomJoinButton);
             rooms.push(roomElement);
         });
+
         return rooms;
     }
 }

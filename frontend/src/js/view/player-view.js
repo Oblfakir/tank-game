@@ -11,8 +11,8 @@ export class PlayerView {
 
     render() {
         const { x, y } = this.state.coordinates;
-        const width = config.player.size;
-        const height = config.player.size;
+        const width = config.PLAYER_SIZE;
+        const height = config.PLAYER_SIZE;
         const angle = Helpers.getAngleByDirection(this.state.direction);
 
         this.context.translate(x, y);

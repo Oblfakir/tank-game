@@ -1,7 +1,7 @@
-import { TransportService } from "../services/transport-service";
-import { config } from "../config/config";
+import { TransportService } from '../services/transport-service';
+import { config } from '../config/config';
 import { constants } from '../config/constants';
-import { Helpers } from "../utils/helpers";
+import { Helpers } from '../utils/helpers';
 import { Connection } from '../logic/connection';
 import io from 'socket.io-client';
 
@@ -17,6 +17,7 @@ export class Initializer {
         this.abortConnection = this.abortConnection.bind(this);
         this.createRoomHandler = this.createRoomHandler.bind(this);
         this.onRoomJoin = this.onRoomJoin.bind(this);
+
         document.getElementById('create-room').addEventListener('click', this.createRoomHandler);
     }
 
@@ -25,19 +26,23 @@ export class Initializer {
         const constantsData = await TransportService.getConstants();
         const configJson = await configData.json();
         const constantsJson = await constantsData.json();
+
         Object.assign(config, configJson);
         Object.assign(constants, constantsJson);
     }
 
     showCurrentPlayersOnline() {
-        io(config.host).on(constants.socketCurrentOnlinePlayers, res => {
+        io(config.host).on(constants.SOCKET_CURRENT_ONLINE_PLAYERS_ACTION, res => {
             const playersPerRoom = JSON.parse(res);
             const roomNames = playersPerRoom.map(x => x.room);
+
             [].slice.call(this.roomsContainerElement.children).forEach(room => {
                 if (roomNames.indexOf(room.dataset.roomName) !== -1) {
                     const row = playersPerRoom.find(x => x.room === room.dataset.roomName);
+
                     if (row) {
-                        const text = 'Players: ' + row.players;
+                        const text = `Players: ${  row.players}`;
+
                         room.querySelector('.room__players').textContent = text;
                     }
                 }
@@ -46,8 +51,8 @@ export class Initializer {
     }
 
     setCanvasSize() {
-        this.canvasContainerElement.style.width = config.CANVAS_SIZE + "px";
-        this.canvasContainerElement.style.height = config.CANVAS_SIZE + "px";
+        this.canvasContainerElement.style.width = `${config.CANVAS_SIZE  }px`;
+        this.canvasContainerElement.style.height = `${config.CANVAS_SIZE  }px`;
         this.canvasTerrain.width = config.CANVAS_SIZE;
         this.canvasTerrain.height = config.CANVAS_SIZE;
         this.canvasPlayers.width = config.CANVAS_SIZE;
@@ -65,6 +70,11 @@ export class Initializer {
         this.toggleVisibility();
         this.connection = new Connection(roomName);
         this.leaveRoomElement.addEventListener('click', await this.abortConnection);
+        window.addEventListener('beforeunload', () => {
+            if (this.connection) {
+                this.connection.abort();
+            }
+        });
     }
 
     async abortConnection() {

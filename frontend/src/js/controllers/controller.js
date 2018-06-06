@@ -29,7 +29,7 @@ export class Controller {
     }
 
     _checkForRestartGameEvent(event) {
-        if (event.name === constants.events.click.fire) {
+        if (event.name === constants.CLICK_EVENTS.FIRE) {
             this.observable.unsubscribe(this._checkForRestartGameEvent);
             this.socketService.reconnectAfterDeath();
             this.isPlayerDead = false;
