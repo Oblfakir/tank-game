@@ -16,4 +16,14 @@ export class TransportService {
     static async addRoom() {
         return await fetch(config.roomsUrl, { method: 'POST' });
     }
+
+    static async connectMobile(mobileCode) {
+        return await fetch(`${config.roomsUrl}/mobile`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ mobileCode })
+        }).then((result) => result.json());
+    }
 }

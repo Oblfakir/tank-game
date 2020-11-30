@@ -1,5 +1,4 @@
 const merge = require('webpack-merge');
-const sass = require('./sass');
 const css = require('./css');
 
 module.exports = function () {
@@ -10,7 +9,6 @@ module.exports = function () {
                 port: 3000
             }
         },
-        css(),
-        sass()
+        css()
     ]);
 };

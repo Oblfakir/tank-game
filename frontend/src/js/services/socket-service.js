@@ -3,11 +3,12 @@ import { config } from '../config/config';
 import { constants } from '../config/constants';
 
 export class SocketService {
-    joinRoom(roomName) {
+    joinRoom(roomName, callback) {
         this.socket = io(config.host);
         this.roomName = roomName;
         this.socket.emit(constants.SOCKET_JOIN_ROOM_ACTION_NAME, roomName);
         this.socket.on(constants.SOCKET_GET_CONNECTION_ID_ACTION_NAME, id => this.playerId = id);
+        this.socket.on(constants.SOCKET_GET_MOBILE_CODE_ACTION_NAME, code => callback(code));
     }
 
     reconnectAfterDeath() {

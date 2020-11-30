@@ -1,4 +1,5 @@
-import './styles/styles.scss';
+import './styles/reset.css';
+import './styles/styles.css';
 import './js';
 import './assets/tank.jpg';
 import './assets/grass.jpg';

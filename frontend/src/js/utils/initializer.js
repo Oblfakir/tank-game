@@ -3,6 +3,7 @@ import { config } from '../config/config';
 import { constants } from '../config/constants';
 import { Helpers } from '../utils/helpers';
 import { Connection } from '../logic/connection';
+import { MobileConnection } from '../logic/mobile-connection';
 import io from 'socket.io-client';
 
 export class Initializer {
@@ -14,9 +15,11 @@ export class Initializer {
         this.canvasContainerElement = document.getElementById('canvas-container');
         this.canvasTerrain = document.getElementById('canvas-terrain');
         this.canvasPlayers = document.getElementById('canvas-players');
+        this.mobileCodeElement = document.getElementById('mobile-code');
         this.abortConnection = this.abortConnection.bind(this);
         this.createRoomHandler = this.createRoomHandler.bind(this);
         this.onRoomJoin = this.onRoomJoin.bind(this);
+        this.showMobileCode = this.showMobileCode.bind(this);
 
         document.getElementById('create-room').addEventListener('click', this.createRoomHandler);
     }
@@ -29,6 +32,23 @@ export class Initializer {
 
         Object.assign(config, configJson);
         Object.assign(constants, constantsJson);
+    }
+
+    async connectMobile(mobileCode) {
+        const result = await TransportService.connectMobile(mobileCode);
+
+        if (result.playerId && result.roomName) {
+            document.getElementById('buttons').classList.toggle('no-display');
+            document.getElementById('code-enter').classList.toggle('no-display');
+
+            this.connection = new MobileConnection(result);
+            // this.leaveRoomElement.addEventListener('click', await this.abortConnection);
+            window.addEventListener('beforeunload', () => {
+                if (this.connection) {
+                    this.connection.abort();
+                }
+            });
+        }
     }
 
     showCurrentPlayersOnline() {
@@ -65,11 +85,15 @@ export class Initializer {
         this.leaveRoomElement.classList.toggle('no-display');
     }
 
-    async onRoomJoin(roomName) {
+    showMobileCode(code) {
+        this.mobileCodeElement.textContent = `Your mobile code: ${code}`;
+    }
+
+    onRoomJoin(roomName) {
         this.setCanvasSize();
         this.toggleVisibility();
-        this.connection = new Connection(roomName);
-        this.leaveRoomElement.addEventListener('click', await this.abortConnection);
+        this.connection = new Connection(roomName, (code) => this.showMobileCode(code));
+        this.leaveRoomElement.addEventListener('click', this.abortConnection);
         window.addEventListener('beforeunload', () => {
             if (this.connection) {
                 this.connection.abort();
